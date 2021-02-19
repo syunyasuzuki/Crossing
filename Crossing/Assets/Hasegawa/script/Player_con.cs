@@ -1,17 +1,48 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player_con : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    //--------------------プレイヤーの行動--------------------
+    /// <summary>
+    /// 各方向に動く
+    /// 斜めも可
+    /// </summary>
+    public void Move(int x,int y)
     {
-        
+
+    }
+    /// <summary>
+    /// 各方向に一つ飛ばしで動く
+    /// </summary>
+    public void JumpMove()
+    {
+
+    }
+    /// <summary>
+    /// 方向転換する
+    /// </summary>
+    public void Turn()
+    {
+
+    }
+    /// <summary>
+    /// ある位置に移動する
+    /// </summary>
+    public void Warmhole()
+    {
+
+    }
+    /// <summary>
+    /// 攻撃？
+    /// </summary>
+    public void Attack()
+    {
+
     }
 
-    // Update is called once per frame
-    void Update()
+
+    // Start is called before the first frame update
+    void Start()
     {
         
     }
