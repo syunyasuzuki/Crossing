@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class SelectManeger : MonoBehaviour
 {
     // Start is called before the first frame update
+    public void OncClickStartSelsect()
+    {
+        SceneManager.LoadScene("SelectScene");
+    }
     public void OnClickStart1()
     {
         SceneManager.LoadScene("1-1");               
