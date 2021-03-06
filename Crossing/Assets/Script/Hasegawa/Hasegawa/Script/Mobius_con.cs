@@ -18,6 +18,21 @@ public class Mobius_con : MonoBehaviour
     [SerializeField] Tenpo m_tempo = Tenpo.Four;
 
     /// <summary>
+    /// ステージの時間
+    /// </summary>
+    [SerializeField] float StageTime = 90;
+
+    /// <summary>
+    /// 現在のステージのタイムアップまでにかかるフレーム数
+    /// </summary>
+    private int MaxStageFrame = 0;
+
+    /// <summary>
+    /// 現在の時間
+    /// </summary>
+    private float m_stageframe = 0;
+
+    /// <summary>
     /// UIの位置
     /// </summary>
     private Vector3 m_position; 
@@ -78,15 +93,10 @@ public class Mobius_con : MonoBehaviour
     private GameObject[] m_uibutton = null;
 
     /// <summary>
-    /// UIの全体の大きさ
-    /// </summary>
-    private Vector3 m_uiscale = new Vector3(9.6f, 2f, 1);
-
-    /// <summary>
-    /// 最大フレーム数
+    /// 楕円の半周でかかるフレーム数
     /// 初期地点を含めるため1フレームを追加
     /// </summary>
-    private int Maxframe = 0;
+    private int EllipseHerfFrame = 0;
 
     /// <summary>
     /// 楕円の状態
@@ -113,6 +123,16 @@ public class Mobius_con : MonoBehaviour
     private float[] m_moveposy = null;
 
     /// <summary>
+    /// プレイヤーが移動できたかの記録
+    /// </summary>
+    private int[] m_movelist = null;
+
+    /// <summary>
+    /// UIを操作した記録
+    /// </summary>
+    private int[] m_ops = null;
+
+    /// <summary>
     /// UIの縦の大きさをUnityに合わせたもの
     /// </summary>
     const float pixcellforunitysize_y = 1f / 50f * 39;
@@ -123,7 +143,7 @@ public class Mobius_con : MonoBehaviour
     const float pixcellforunitysize_x = 1f / 50f * 60;
 
     /// <summary>
-    /// 半楕円を移動するのにかかるフレーム数
+    /// 1/4楕円を移動するのにかかるフレーム数
     /// </summary>
     private int herfellipsesize = 0;
 
@@ -138,30 +158,35 @@ public class Mobius_con : MonoBehaviour
     private void Create_Strip()
     {
 
-        //UIの大きさを確定
-        m_uiscale = new Vector3(1.2f * (int)m_tempo * 2, 2f, 1);
+        //ステージのフレーム数を確定
+        MaxStageFrame = (int)(60 * StageTime);
 
         //UIを生成する位置
         m_position = transform.position;
 
+        //もし半周にかかる時間が1秒未満に設定されていた場合1秒に変える
+        if (Herftime < 1) Herftime = 1;
+
         //半周でかかるフレーム数
-        Maxframe = (int)(Herftime * 60) + 1;
+        EllipseHerfFrame = (int)(Herftime * 60) + 1;
 
         //適切でない秒数の場合それ以降の処理をはじく
-        if ((Maxframe - 1) % (int)m_tempo != 0) 
+        if ((EllipseHerfFrame - 1) % (int)m_tempo != 0) 
         {
             Debug.Log("指定された秒数が適切ではありません");
             return;
         }
 
         //配列を確保
-        m_moveposx = new float[Maxframe];
-        m_moveposy = new float[Maxframe];
+        m_moveposx = new float[EllipseHerfFrame];
+        m_moveposy = new float[EllipseHerfFrame];
         ellipsemother = new GameObject("strip");
         m_ellipse = new GameObject[(int)m_tempo * 2];
         m_spren = new SpriteRenderer[(int)m_tempo * 2];
         m_ellipsemodes = new EllipseMode[(int)m_tempo * 2];
         m_uibutton = new GameObject[(int)m_tempo - 1];
+        m_movelist = new int[MaxStageFrame];
+        m_ops = new int[MaxStageFrame];
 
         //全体の大きさを確定
         float scalex = 2.4f * (int)m_tempo;
@@ -192,8 +217,8 @@ public class Mobius_con : MonoBehaviour
             m_uibutton[s].transform.position = new Vector3(-sx + 2.4f * (s + 1), m_position.y, 0);
         }
 
-        //半楕円にかかるフレーム数を確定
-        herfellipsesize = (Maxframe - 1) / (int)m_tempo;
+        //1/4楕円にかかるフレーム数を確定
+        herfellipsesize = (EllipseHerfFrame - 1) / (int)m_tempo;
 
         //移動する位置を確定
         for (int s = 0; s < (int)m_tempo; ++s)
@@ -202,12 +227,12 @@ public class Mobius_con : MonoBehaviour
             for(int i = 0; i <= herfellipsesize; ++i)
             {
                 m_moveposx[s * herfellipsesize + i] = fp + 2.4f / herfellipsesize * i;
-                m_moveposy[s * herfellipsesize + i] = Mathf.Sqrt((1 - Mathf.Pow(-1.2f + 2.4f / herfellipsesize * i, 2) / Mathf.Pow(pixcellforunitysize_x, 2)) * Mathf.Pow(pixcellforunitysize_y, 2)); ;
+                m_moveposy[s * herfellipsesize + i] = Mathf.Sqrt((1 - Mathf.Pow(-1.2f + 2.4f / herfellipsesize * i, 2) / Mathf.Pow(pixcellforunitysize_x, 2)) * Mathf.Pow(pixcellforunitysize_y, 2));
             }
             m_moveposy[s * herfellipsesize] = 0;
         }
-        m_moveposx[Maxframe - 1] = -sx + (1.2f * (int)m_tempo * 2);
-        m_moveposy[Maxframe - 1] = 0;
+        m_moveposx[EllipseHerfFrame - 1] = -sx + (1.2f * (int)m_tempo * 2);
+        m_moveposy[EllipseHerfFrame - 1] = 0;
 
         //UIの状態を設定
         m_ellipsemodes[0] = EllipseMode.Cross;
@@ -259,14 +284,24 @@ public class Mobius_con : MonoBehaviour
 
         int move = m_moveuibutton ? 1 : -1;
 
+        float dt = Time.deltaTime * 60;
+
+        //時間を加算
+        m_stageframe += dt * move;
+
+        m_stageframe = Mathf.Clamp(m_stageframe, 0, MaxStageFrame);
+
         //カウントを加算
-        movecount += Time.deltaTime * 60 * (int)movevec.x * move;
+        if (m_stageframe < MaxStageFrame)
+        {
+            movecount += dt * (int)movevec.x * move;
+        }
 
         //int型に変換、範囲外を除外
-        int p = Mathf.Clamp(Mathf.RoundToInt(movecount), 0, Maxframe - 1);
+        int p = Mathf.Clamp(Mathf.RoundToInt(movecount), 0, EllipseHerfFrame - 1);
 
         //wipsを移動
-        int modepos = Mathf.Clamp(p / (herfellipsesize / 2), 0, (int)m_tempo * 2 - 1);
+        int modepos = Mathf.Clamp(Mathf.FloorToInt(movecount / (herfellipsesize / 2f)), 0, (int)m_tempo * 2 - 1);
         switch (m_ellipsemodes[modepos])
         {
             case EllipseMode.Normal:
@@ -284,7 +319,7 @@ public class Mobius_con : MonoBehaviour
         {
             for(int i = 1; i < (int)m_tempo; ++i)
             {
-                if (p == herfellipsesize * i && m_ellipsemodes[modepos]==EllipseMode.Cross)
+                if (p == herfellipsesize * i && m_ellipsemodes[modepos] == EllipseMode.Cross)
                 {
                     movevec.y *= -1;
                     wasswitch = p;
@@ -303,9 +338,9 @@ public class Mobius_con : MonoBehaviour
                         case 2:
                             //ジャンプ
                             Debug.Log("jump");
-                            if (x == 1) x+=move;
-                            if (y == 1) y+=move;
-                            player.JumpMove(x, y);
+                            if (x == 1 || x == -1) x *= 2;
+                            if (y == 1 || y == -1) y *= 2;
+                            player.Move(x, y);
                             break;
                         case 3:
                             //方向転換
@@ -319,16 +354,16 @@ public class Mobius_con : MonoBehaviour
                     }
                 }
             }
-            if (p == 0 || p == Maxframe - 1)
+            if (p == 0 || p == EllipseHerfFrame - 1)
             {
                 movevec.y *= -1;
                 wasswitch = p;
             }
         }
-        if ((movevec.x * move > 0 && movecount >= Maxframe) || (movevec.x * move < 0 && movecount <= 0))
+        if ((movevec.x * move > 0 && movecount >= EllipseHerfFrame) || (movevec.x * move < 0 && movecount <= 0))
         {
 
-            if (movevec.x * move> 0) { movecount = Maxframe - 1; }
+            if (movevec.x * move> 0) { movecount = EllipseHerfFrame - 1; }
             else if (movevec.x  * move< 0) { movecount = 0; }
 
             movevec.x *= -1;
@@ -339,6 +374,11 @@ public class Mobius_con : MonoBehaviour
     /// UIを動かすか
     /// </summary>
     [SerializeField] bool IsMoveUI = true;
+
+    /// <summary>
+    /// 前回UIの操作をしたフレーム
+    /// </summary>
+    private int waschangeframe = 0;
 
     /// <summary>
     /// UIをねじれを切り替える
@@ -366,6 +406,8 @@ public class Mobius_con : MonoBehaviour
         //UIの操作ができない場合処理をはじく
         if (!IsMoveUI) { return; }
 
+        int p = Mathf.Clamp(Mathf.RoundToInt(m_stageframe), 0, MaxStageFrame - 1);
+
         if (m_moveuibutton)
         {
             //輪をねじる処理
@@ -375,21 +417,27 @@ public class Mobius_con : MonoBehaviour
                 RaycastHit2D[] hit2d = Physics2D.RaycastAll(ray.origin, ray.direction);
                 foreach (RaycastHit2D h in hit2d)
                 {
-                    if (h.collider != null)
+                    if (h.collider != null && Mathf.Abs(p - waschangeframe) > 0)
                     {
                         bool hit = false;
                         switch (h.collider.tag)
                         {
                             case "Move":
                                 ChangeUI(1);
+                                m_ops[p] = 1;
+                                waschangeframe = p;
                                 hit = true;
                                 break;
                             case "Jump":
                                 ChangeUI(3);
+                                m_ops[p] = 3;
+                                waschangeframe = p;
                                 hit = true;
                                 break;
                             case "Turn":
                                 ChangeUI(5);
+                                m_ops[p] = 5;
+                                waschangeframe = p;
                                 hit = true;
                                 break;
                         }
@@ -401,7 +449,11 @@ public class Mobius_con : MonoBehaviour
         else
         {
             //輪を自動でねじる処理
-
+            if (m_ops[p] != 0)
+            {
+                ChangeUI(m_ops[p]);
+                m_ops[p] = 0;
+            }
         }
     }
 
@@ -422,6 +474,15 @@ public class Mobius_con : MonoBehaviour
         }
     }
 
+    private void OnGUI()
+    {
+        float x = (float)Screen.width / 1280;
+        float y = (float)Screen.height / 720;
+        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(x, y, 1));
+
+        GUI.Label(new Rect(1100, 100, 200, 50), (int)(m_stageframe / 60) + "秒");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -432,6 +493,7 @@ public class Mobius_con : MonoBehaviour
     void Update()
     {
         Wisp_task();
+        Ellipse_task();
         Time_task();
     }
 }

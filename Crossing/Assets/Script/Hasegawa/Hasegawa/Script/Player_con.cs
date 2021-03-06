@@ -36,33 +36,25 @@ public class Player_con : MonoBehaviour
         map = GetComponent<Test_map>();
         map.Tok_first(ref playerposition.x, ref playerposition.y);
         Player = Instantiate(Player_prefab);
-        Player.GetComponent<SpriteRenderer>().color = Color.yellow;
         Player.transform.position = map.Tok_pos();
     }
 
     /// <summary>
     /// 各方向に動く
+    /// 移動できたかどうかを返す
     /// </summary>
-    public void Move(int x,int y)
+    public int Move(int x,int y)
     {
         if (map.Tok_map(playerposition.x + x, playerposition.y + y) != -1)
         {
             playerposition.x += x;
             playerposition.y += y;
             Player.transform.position = map.Tok_pos(playerposition.x, playerposition.y);
+            return 0;
         }
-    }
-
-    /// <summary>
-    /// 各方向に一つ飛ばしで動く
-    /// </summary>
-    public void JumpMove(int x,int y)
-    {
-        if (map.Tok_map(playerposition.x + x, playerposition.y + y) != -1)
+        else
         {
-            playerposition.x += x;
-            playerposition.y += y;
-            Player.transform.position = map.Tok_pos(playerposition.x, playerposition.y);
+            return -1;
         }
     }
 
@@ -77,7 +69,7 @@ public class Player_con : MonoBehaviour
     /// <summary>
     /// ある位置に移動する
     /// </summary>
-    public void Warmhole()
+    public void Warmhole(int x,int y)
     {
 
     }
