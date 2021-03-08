@@ -14,6 +14,7 @@ public class WillAnmation : MonoBehaviour
     };
 
     Animator Animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,13 @@ public class WillAnmation : MonoBehaviour
     }
 
    [SerializeField] int animcount = 0;
-    void Set_Animation()
+
+    void Animation_Random()//アニメーションをランダムに動かす為の物
+    {
+
+    }
+
+    void Set_Animation()//アニメーション
     {
         switch (animcount)
         {
