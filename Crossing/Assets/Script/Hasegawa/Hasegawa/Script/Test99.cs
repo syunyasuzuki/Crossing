@@ -5,42 +5,80 @@ using UnityEngine;
 public class Test99 : MonoBehaviour
 {
 
-    private GameObject cube = null;
-
-    Mobius_data m_data = null;
-
-    [SerializeField] GameObject pre = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_data = GetComponent<Mobius_data>();
-        cube = Instantiate(pre);
+
     }
+
+    bool ready = false;
+
+    bool clic = false;
+
+    int count = 0;
+    int []clicnum = new int[10];
+
+    float time = 0;
 
     // Update is called once per frame
     void Update()
     {
-
-        m_data.Timecount(1);
-
-        //一周のうち何秒地点にいるか
-        float a = m_data.Tok_time() % (m_data.Herftime * 2);
-        //現在いる地点が半周を超えている場合半周での値に変換する
-        float b = a;
-        if (a > m_data.Herftime)
+        if (!clic)
         {
-            b = m_data.Herftime + (m_data.Herftime - a);
+            if (!ready)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    ready = true;
+                    time = 3;
+                }
+            }
+            else
+            {
+                time = Mathf.Clamp(time - Time.deltaTime, 0, 3);
+                if (time <= 0)
+                {
+                    clic = true;
+                    ready = false;
+                }
+            }
+        }
+        else
+        {
+            time = Mathf.Clamp(time + Time.deltaTime, 0, 10);
+            if (time < 10 && Input.GetMouseButtonDown(0))
+            {
+                ++clicnum[count];
+            }
         }
 
-        float x = m_data.UIscalex / m_data.Herftime * b;
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            clic = ready = false;
+            if (++count >= 10)
+            {
+                count = 0;
+            }
+            clicnum[count] = 0;
+        }
+    }
 
-        int c = Mathf.Clamp(Mathf.FloorToInt(x / (m_data.UIscalex / ((int)m_data.tempo * 2))), 0, (int)m_data.tempo * 2 - 1);
+    private void OnGUI()
+    {
+        float x = Screen.width / 1280;
+        float y = Screen.height / 720;
+        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(x, y, 1));
 
-        float y = Mathf.Clamp(Mathf.Sqrt((1 - Mathf.Pow(-m_data.Pixcellforunitysize_x + m_data.Pixcellforunitysize_x * 2 / (m_data.Herftime / (int)m_data.tempo) * (b - m_data.Herftime/(int)m_data.tempo * (c / 2)), 2) / Mathf.Pow(m_data.Pixcellforunitysize_x, 2)) * Mathf.Pow(m_data.Pixcellforunitysize_y, 2)), 0, m_data.Pixcellforunitysize_y) + m_data.Position.y;
+        GUI.skin.label.normal.textColor = !ready ? Color.red : Color.blue;
+        GUI.skin.label.fontSize = 40;
 
-        Debug.Log(b % m_data.Herftime / (int)m_data.tempo);
+        GUI.Label(new Rect(600, 300, 200, 100), time.ToString());
 
-        cube.transform.position = new Vector3(- m_data.UIscalex / 2 + x, y, 0);
+        GUI.skin.label.fontSize = 20;
+        for(int i = 0; i < 10; ++i)
+        {
+            GUI.Label(new Rect(400, 400 + 20*i, 50, 30), clicnum[i].ToString());
+        }
     }
 }

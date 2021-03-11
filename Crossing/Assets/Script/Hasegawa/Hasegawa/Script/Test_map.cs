@@ -11,11 +11,15 @@ public class Test_map : MonoBehaviour
 
     [SerializeField] GameObject mapchip = null;
 
+    [SerializeField] GameObject Goal = null;
+
     private GameObject mapmother = null;
 
     private int[,] map;
 
     private int[] player = new int[2];
+
+    const float movemapy = 0;
 
     public int Tok_map(int x,int y)
     {
@@ -29,12 +33,12 @@ public class Test_map : MonoBehaviour
 
     public Vector3 Tok_pos(int x, int y)
     {
-        return new Vector3(BasisPoint.x + x * Ratio.x, BasisPoint.y - y * Ratio.y, 0);
+        return new Vector3(BasisPoint.x + x * Ratio.x, BasisPoint.y - y * Ratio.y + movemapy, 0);
     }
 
     public Vector3 Tok_pos()
     {
-        return new Vector3(BasisPoint.x + Ratio.x * player[0], BasisPoint.y - Ratio.y * player[1], 0);
+        return new Vector3(BasisPoint.x + Ratio.x * player[0], BasisPoint.y - Ratio.y * player[1] + movemapy, 0);
     }
 
     public void Tok_first(ref int x,ref int y)
@@ -68,11 +72,9 @@ public class Test_map : MonoBehaviour
             }
         }
 
-        GameObject goal = Instantiate(mapchip);
-        goal.transform.localScale = new Vector3(0.2f, 0.2f, 1);
+        GameObject goal = Instantiate(Goal);
         goal.transform.position = new Vector3(BasisPoint.x + Ratio.x * 6, BasisPoint.y - Ratio.y * 6, 0);
         goal.GetComponent<SpriteRenderer>().sortingOrder = 1;
-        goal.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
 }

@@ -112,10 +112,20 @@ public class Mobius_con2 : MonoBehaviour
     }
 
     /// <summary>
+    /// 前回方向を変えた時間
+    /// </summary>
+    private float changepoint = 0;
+
+    /// <summary>
     /// UI上のオブジェクトの回り方向
     /// 1 = 時計回り
     /// </summary>
     private int wispmovevec = 1;
+
+    /// <summary>
+    /// 進行方向
+    /// </summary>
+    private int turnvec = 0;
 
     /// <summary>
     /// UI上のオブジェクトの処理
@@ -137,6 +147,85 @@ public class Mobius_con2 : MonoBehaviour
         float x = m_data.UIscalex / m_data.Herftime * b;
         //UIを細かく分けた際に現在どの地点にいるかを求める
         int c=Mathf.Clamp(Mathf.FloorToInt(x/(m_data.UIscalex/((int)m_data.tempo*2))),0,(int)m_data.tempo*2-1);
+
+        //交点を通過した際に回転方向を変える
+        if (c > 0 && c < (int)m_data.tempo * 2 - 1 && m_data.ellipsemodes[c] == Mobius_data.EllipseMode.Cross)
+        {
+            if (m_data.Movewisp)
+            {
+                if (a <= m_data.Herftime)
+                {
+                    if (b >= m_data.Herftime / (int)m_data.tempo * ((c + 1) / 2) && Mathf.Abs(m_data.Tok_time() - changepoint) >= m_data.Herftime / (int)m_data.tempo)
+                    {
+                        changepoint = m_data.Tok_time();
+                        switch ((c + 1) / 2)
+                        {
+                            case 1:
+                                m_data.MoveCount(player.Move(1), 1);
+                                break;
+                            case 2:
+                                m_data.MoveCount(player.Jump(1), 2);
+                                break;
+                            case 3:
+                                if (--turnvec < 0) { turnvec = 3; }
+                                m_uibutton[0].transform.localRotation = Quaternion.Euler(0, 0, 90 * turnvec);
+                                player.Turn(turnvec);
+                                m_data.MoveCount(1, 3);
+                                break;
+                        }
+                        wispmovevec *= -1;
+                    }
+                }
+                else
+                {
+                    if (b <= m_data.Herftime / (int)m_data.tempo * ((c + 1) / 2) && Mathf.Abs(m_data.Tok_time() - changepoint) >= m_data.Herftime / (int)m_data.tempo)
+                    {
+                        changepoint = m_data.Tok_time();
+                        switch ((c + 1) / 2)
+                        {
+                            case 1:
+                                m_data.MoveCount(player.Move(1), 1);
+                                break;
+                            case 2:
+                                m_data.MoveCount(player.Jump(1), 2);
+                                break;
+                            case 3:
+                                if (--turnvec < 0) { turnvec = 3; }
+                                m_uibutton[0].transform.localRotation = Quaternion.Euler(0, 0, 90 * turnvec);
+                                player.Turn(turnvec);
+                                m_data.MoveCount(1, 3);
+                                break;
+                        }
+                        wispmovevec *= -1;
+                    }
+                }
+            }
+            else
+            {
+                if (m_data.Tok_action() >= m_data.Tok_time())
+                {
+                    if (m_data.Tok_playermove() == 1)
+                    {
+                        switch (m_data.Tok_playeraction())
+                        {
+                            case 1:
+                                player.Move(-1);
+                                break;
+                            case 2:
+                                player.Jump(-1);
+                                break;
+                            case 3:
+                                if (++turnvec > 3) { turnvec = 0; }
+                                m_uibutton[0].transform.localRotation = Quaternion.Euler(0, 0, 90 * turnvec);
+                                player.Turn(turnvec);
+                                break;
+                        }
+                    }
+                    wispmovevec *= -1;
+                    m_data.Delete_ActionRecord();
+                }
+            }
+        }
 
         //UI上のオブジェクトが上弦にいるか下弦にいるか求める
         int n;
@@ -177,19 +266,11 @@ public class Mobius_con2 : MonoBehaviour
     }
 
     /// <summary>
-    /// 前回方向を変えた時間
-    /// </summary>
-    private float changepoint = 0;
-
-    /// <summary>
     /// 加算する時間の倍率
     /// </summary>
     private float timescale = 1;
 
-    /// <summary>
-    /// 指定されたUIの状態を切り替える
-    /// </summary>
-    private void ChangeUI(int n)
+    private void ChangeUISprite(int n)
     {
         if (m_data.ellipsemodes[n] == Mobius_data.EllipseMode.Normal)
         {
@@ -204,6 +285,31 @@ public class Mobius_con2 : MonoBehaviour
     }
 
     /// <summary>
+    /// 指定されたUIの状態を切り替える
+    /// UI上のオブジェクトが一定距離内に入っている場合処理をはじく
+    /// </summary>
+    private void ChangeUI(int n)
+    {
+        //一周のうち何秒地点にいるか
+        float a = m_data.Tok_time() % (m_data.Herftime * 2);
+        //現在いる地点が半周を超えている場合半周での値に変換する
+        float b = a;
+        if (a > m_data.Herftime)
+        {
+            b = m_data.Herftime + (m_data.Herftime - a);
+        }
+        //x軸上で現在どこにいるかを求める
+        float x = m_data.UIscalex / m_data.Herftime * b;
+        //UIを細かく分けた際に現在どの地点にいるかを求める
+        int c = Mathf.Clamp(Mathf.FloorToInt(x / (m_data.UIscalex / ((int)m_data.tempo * 2))), 0, (int)m_data.tempo * 2 - 1);
+
+        if (c != 0 &&(c - 1) / 2 * 2 + 1 == n) return;
+
+        m_data.ChangeCount(n);
+        ChangeUISprite(n);
+    }
+
+    /// <summary>
     /// 輪の処理
     /// </summary>
     private void Ellipse_task()
@@ -215,22 +321,25 @@ public class Mobius_con2 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
             m_data.Movewisp = false;
-            timescale = -1; 
+            timescale = -1;
+            changepoint = -1;
         }
         if (Input.GetKey(KeyCode.Space)) 
-        { 
-            timescale -= 0.1f; 
+        {
+            timescale = Mathf.Clamp(timescale - 0.1f, -5, -1);
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             m_data.Movewisp = true;
             timescale = 1;
+            changepoint = -1;
         }
         m_data.Timecount(timescale);
 
-        //ボタン操作
-        if (m_data.Movewisp)
+        //UI操作
+        if (m_data.Movewisp && m_data.Tok_time() < m_data.StageTime)
         {
+            //マウス
             if (Input.GetMouseButtonDown(0)){
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
@@ -239,21 +348,48 @@ public class Mobius_con2 : MonoBehaviour
                     switch (hit.collider.tag)
                     {
                         case "Move":
-
+                            ChangeUI(1);
                             break;
                         case "Jump":
-
+                            ChangeUI(3);
                             break;
                         case "Turn":
-
+                            ChangeUI(5);
                             break;
                     }
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    ChangeUI(1);
+                }
+                if (Input.GetKeyDown(KeyCode.DownArrow) && (int)m_data.tempo >= 3)
+                {
+                    ChangeUI(3);
+                }
+                if (Input.GetKeyDown(KeyCode.RightArrow) && (int)m_data.tempo >= 4)
+                {
+                    ChangeUI(5);
                 }
             }
         }
         else
         {
-
+            int[] clic = new int[(int)m_data.tempo - 1];
+            while (m_data.Tok_clictime() >= m_data.Tok_time())
+            {
+                ++clic[m_data.Tok_clicnumber() / 2];
+                m_data.Delete_ClicRecord();
+            }
+            for (int i = 0; i < (int)m_data.tempo - 1; ++i)
+            {
+                if (clic[i] % 2 == 1)
+                {
+                    ChangeUISprite(1 + 2 * i);
+                }
+            }
         }
     }
 

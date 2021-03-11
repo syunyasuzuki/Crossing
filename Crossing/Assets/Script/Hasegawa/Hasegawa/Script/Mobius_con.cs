@@ -333,14 +333,14 @@ public class Mobius_con : MonoBehaviour
                         case 1:
                             //移動
                             Debug.Log("move");
-                            player.Move(x, y);
+                            player.Move(1);
                             break;
                         case 2:
                             //ジャンプ
                             Debug.Log("jump");
                             if (x == 1 || x == -1) x *= 2;
                             if (y == 1 || y == -1) y *= 2;
-                            player.Move(x, y);
+                            player.Move(1);
                             break;
                         case 3:
                             //方向転換

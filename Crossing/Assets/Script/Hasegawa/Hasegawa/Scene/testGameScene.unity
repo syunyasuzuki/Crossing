@@ -133,8 +133,10 @@ GameObject:
   - component: {fileID: 69106032}
   - component: {fileID: 69106033}
   - component: {fileID: 69106034}
+  - component: {fileID: 69106035}
   - component: {fileID: 69106030}
   - component: {fileID: 69106031}
+  - component: {fileID: 69106036}
   m_Layer: 0
   m_Name: GameMaster
   m_TagString: Untagged
@@ -169,11 +171,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tempo: 4
-  StageTime: 10
+  StageTime: 30
   IsTimeCount: 1
   Herftime: 3
   IsMoveWisp: 1
   IsMoveUI: 1
+  MaxClicForSec: 16
 --- !u!212 &69106031
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -253,8 +256,9 @@ MonoBehaviour:
   Mapsizex: 10
   Mapsizey: 10
   Ratio: {x: 1, y: 0.7}
-  BasisPoint: {x: -4.5, y: 4.5, z: 0}
+  BasisPoint: {x: -4.5, y: 4.2, z: 0}
   mapchip: {fileID: 7534346053831609409, guid: d57ca4356bba7aa4885b941756935c32, type: 3}
+  Goal: {fileID: 226290042983153876, guid: d7cc1dea7bcfb5c4b9f4c8b5e75931e4, type: 3}
 --- !u!114 &69106034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +284,48 @@ MonoBehaviour:
   - {fileID: 7984989971171469572, guid: 0d968e154ea1f504698ab4ef2800bf9b, type: 3}
   - {fileID: 765486369920525535, guid: 2f760d46984403f4fb911e0b1b712d33, type: 3}
   - {fileID: 3332411006969793477, guid: f3cbdb2d4e8f8174c9f148efb4b0092f, type: 3}
+--- !u!114 &69106035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69106028}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6106f3912540834fb9a7257f9f68b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tempo: 4
+  StageTime: 90
+  Herftime: 3
+  UIobject_middle: {fileID: 3254790478721776404, guid: 29fc90d1e1dddaa48b1132fadcef54fc,
+    type: 3}
+  UIspritemiddle:
+  - {fileID: 21300000, guid: 640f3f01238ad164ea09b9a1501c7038, type: 3}
+  - {fileID: 21300000, guid: 239ab9f3b33960e4cb098059c728aea2, type: 3}
+  UIobject_side: {fileID: 1934381278394901289, guid: 7853ad898658cd54faaa6788743165a3,
+    type: 3}
+  UIobject_wisp: {fileID: 7411457250111954310, guid: 82a883f120ff87648bd277513516aae0,
+    type: 3}
+  UIbutton:
+  - {fileID: 7984989971171469572, guid: 0d968e154ea1f504698ab4ef2800bf9b, type: 3}
+  - {fileID: 765486369920525535, guid: 2f760d46984403f4fb911e0b1b712d33, type: 3}
+  - {fileID: 3332411006969793477, guid: f3cbdb2d4e8f8174c9f148efb4b0092f, type: 3}
+  IsMoveWisp: 1
+  IsMoveUI: 1
+--- !u!114 &69106036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69106028}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fea58000508a4d42bb9959e52d3a145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1002733069
 GameObject:
   m_ObjectHideFlags: 0

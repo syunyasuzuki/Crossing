@@ -96,37 +96,78 @@ public class Mobius_data :MonoBehaviour
     public EllipseMode[] ellipsemodes { get; set; } = null;
 
     /// <summary>
+    /// 1秒間にクリックできる限界の回数
+    /// </summary>
+    [SerializeField] int MaxClicForSec = 16;
+
+    /// <summary>
+    /// 最大でUIを操作することのできる回数
+    /// </summary>
+    private int MaxChangeCount = 0;
+
+    /// <summary>
     /// UIを操作した回数
     /// </summary>
     private int changecount { get; set; } = 0;
 
     /// <summary>
+    /// ボタンを押したときの情報
+    /// </summary>
+    private struct Clicdata
+    {
+        //ボタンが押された時間
+        public float time;
+        //何番のボタンが押されたか
+        public int number;
+    }
+
+    /// <summary>
     /// UIを操作した記録
     /// </summary>
-    private float[] buttonclic { get; set; } = null;
+    private Clicdata[] buttonclic { get; set; } = null;
 
     /// <summary>
     /// UIを操作した時間を記録する
     /// </summary>
-    public void ChangeCount()
+    public void ChangeCount(int n)
     {
-        buttonclic[changecount] = Tok_time();
-        ++changecount;
+        if (changecount < MaxChangeCount)
+        {
+            buttonclic[changecount].time = Tok_time();
+            buttonclic[changecount].number = n;
+            ++changecount;
+        }
     }
 
     /// <summary>
     /// 直前のUIを操作した時間を知る
-    /// 直前の時間がない場合-1を返す
+    /// 直前の時間がない場合-2を返す
     /// </summary>
-    public float Tok_clic()
+    public float Tok_clictime()
     {
         if (changecount - 1 < 0)
         {
-            return -1;
+            return -2;
         }
         else
         {
-            return buttonclic[changecount - 1];
+            return buttonclic[changecount - 1].time;
+        }
+    }
+
+    /// <summary>
+    /// 直前のUIを操作したUIの番号を知る
+    /// 直前の操作記録がない場合-2を返す
+    /// </summary>
+    public int Tok_clicnumber()
+    {
+        if (changecount - 1 < 0)
+        {
+            return -2;
+        }
+        else
+        {
+            return buttonclic[changecount - 1].number;
         }
     }
 
@@ -137,10 +178,16 @@ public class Mobius_data :MonoBehaviour
     {
         if (changecount > 0)
         {
-            buttonclic[changecount - 1] = 0;
+            buttonclic[changecount - 1].time = 0;
+            buttonclic[changecount - 1].number = 0;
             --changecount;
         }
     }
+
+    /// <summary>
+    /// 最大で交点を通る回数
+    /// </summary>
+    private int MaxMoveCount = 0;
 
     /// <summary>
     /// 交点を通った回数
@@ -148,30 +195,41 @@ public class Mobius_data :MonoBehaviour
     public int movecount { get; set; } = 0;
 
     /// <summary>
-    /// UIが交点を通った記録
+    /// プレイヤーのデータ
     /// </summary>
-    private float[] moveaction { get; set; } = null;
+    private struct Playerdata
+    {
+        //プレイヤーのアクションが起きた時間
+        public float time;
+        //プレイヤーが移動することができたか
+        public int canmove;
+        //プレイヤーが起こしたアクション番号
+        public int action;
+    }
 
     /// <summary>
-    /// プレイヤーが移動できたかの記録
+    /// プレイヤーのアクション記録
     /// </summary>
-    private int[] playermovelist { get; set; } = null;
+    private Playerdata[] playeraction { get; set; } = null;
 
     /// <summary>
     /// 交点を通った時間を記録する
     /// </summary>
-    public void MoveCount(int m)
+    public void MoveCount(int can,int act)
     {
-        moveaction[movecount] = Tok_time();
-        playermovelist[movecount] = m;
-        ++movecount;
+        if (movecount < MaxMoveCount)
+        {
+            playeraction[movecount].time = Tok_time();
+            playeraction[movecount].canmove = can;
+            playeraction[movecount].action = act;
+            ++movecount;
+        }
     }
 
     /// <summary>
     /// 直前のUIが交点を通った時間を知る
     /// 直前の情報がない場合-1を返す
     /// </summary>
-    /// <returns></returns>
     public float Tok_action()
     {
         if (movecount - 1 < 0)
@@ -180,7 +238,7 @@ public class Mobius_data :MonoBehaviour
         }
         else
         {
-            return moveaction[movecount - 1];
+            return playeraction[movecount - 1].time;
         }
     }
 
@@ -198,7 +256,23 @@ public class Mobius_data :MonoBehaviour
         }
         else
         {
-            return playermovelist[movecount - 1];
+            return playeraction[movecount - 1].canmove;
+        }
+    }
+
+    /// <summary>
+    /// 直前に通った交点の番号を知る
+    /// 直前の情報がない場合-2を返す
+    /// </summary>
+    public int Tok_playeraction()
+    {
+        if (movecount - 1 < 0)
+        {
+            return -2;
+        }
+        else
+        {
+            return playeraction[movecount - 1].action;
         }
     }
 
@@ -209,8 +283,9 @@ public class Mobius_data :MonoBehaviour
     {
         if(movecount > 0)
         {
-            moveaction[movecount - 1] = 0;
-            playermovelist[movecount - 1] = 0;
+            playeraction[movecount - 1].time = 0;
+            playeraction[movecount - 1].canmove = 0;
+            playeraction[movecount - 1].action = 0;
             --movecount;
         }
     }
@@ -244,6 +319,32 @@ public class Mobius_data :MonoBehaviour
 
         //UIの状態を設定
         ellipsemodes[0] = ellipsemodes[ellipsemodes.Length - 1] = EllipseMode.Cross;
+
+        //UIを操作できる回数を確定する
+        MaxChangeCount = Mathf.FloorToInt(MaxClicForSec * StageTime);
+        buttonclic = new Clicdata[MaxChangeCount];
+
+        //交点を通る回数を確定する
+        MaxMoveCount = Mathf.FloorToInt(StageTime / (Herftime * 2) * ((int)tempo - 1) * 2);
+        playeraction = new Playerdata[MaxMoveCount];
+
+        DebugMode();
     }
 
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Debug.Log("movecount:" + movecount + "   changecount:" + changecount);
+        }
+    }
+
+    void DebugMode()
+    {
+        Debug.Log("StageTime:" + StageTime + "   HerfTime:" + Herftime + "   Tempo:" + tempo);
+        Debug.Log("UI_Position:" + Position + "   UIscalex:" + UIscalex);
+        Debug.Log("MaxClicForSec:" + MaxClicForSec + "   MaxChangeCount:" + MaxChangeCount + "   MaxMoveCount:" + MaxMoveCount);
+
+    }
 }
