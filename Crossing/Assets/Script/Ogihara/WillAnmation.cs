@@ -54,5 +54,6 @@ public class WillAnmation : MonoBehaviour
     void Update()
     {
         Set_Animation();
+        Animation_Random();
     }
 }
