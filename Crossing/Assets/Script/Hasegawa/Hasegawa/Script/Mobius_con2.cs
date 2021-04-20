@@ -53,6 +53,11 @@ public class Mobius_con2 : MonoBehaviour
     private GameObject m_wisp = null;
 
     /// <summary>
+    /// 生成したUI上を移動するオブジェクトのスプライト管理
+    /// </summary>
+    private SpriteRenderer m_wispspr = null;
+
+    /// <summary>
     /// 生成したUIのボタン
     /// </summary>
     private GameObject[] m_uibutton = null;
@@ -80,13 +85,18 @@ public class Mobius_con2 : MonoBehaviour
         for(int s = 1; s < (int)m_data.tempo * 2 - 1; ++s)
         {
             m_ellipse[s] = Instantiate(UIobject_middle);
-            m_ellipse[s].transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x / 2 + (m_data.Pixcellforunitysize_x * s), m_data.Position.y, 0);
+            m_spren[s] = m_ellipse[s].GetComponent<SpriteRenderer>();
+            m_ellipse[s].transform.position = new Vector3(-m_data.Pixcellforunitysize_x * ((int)m_data.tempo - 2) + m_data.Pixcellforunitysize_x * 2 * ((s - 1) / 2) + m_data.Position.x, m_data.Position.y, 0);
             if (s % 2 == 1)
             {
-                m_ellipse[s].transform.localScale = new Vector3(-1, 1, 1);
+                m_ellipse[s].transform.localScale = new Vector3(1, -1, 1);
+                m_spren[s].sortingOrder = 1;
+            }
+            else
+            {
+                m_spren[s].sortingOrder = 4;
             }
             m_ellipse[s].transform.parent = ellipsemother.transform;
-            m_spren[s] = m_ellipse[s].GetComponent<SpriteRenderer>();
         }
         m_ellipse[0] = Instantiate(UIobject_side);
         m_ellipse[0].transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x / 2, m_data.Position.y, 0);
@@ -106,6 +116,7 @@ public class Mobius_con2 : MonoBehaviour
         //UI上を移動するオブジェクトを生成
         m_wisp = Instantiate(UIobject_wisp);
         m_wisp.transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2, m_data.Position.y, 0);
+        m_wispspr = m_wisp.GetComponent<SpriteRenderer>();
 
         //プレイヤーを参照する
         player = GetComponent<Player_con>();
@@ -157,6 +168,12 @@ public class Mobius_con2 : MonoBehaviour
                 {
                     if (b >= m_data.Herftime / (int)m_data.tempo * ((c + 1) / 2) && Mathf.Abs(m_data.Tok_time() - changepoint) >= m_data.Herftime / (int)m_data.tempo)
                     {
+                        GameObject redb = Instantiate(UIbutton[0]);
+                        redb.transform.position = Vector3.zero;
+                        redb.GetComponent<SpriteRenderer>().color = Color.red;
+                        redb.GetComponent<SpriteRenderer>().sortingOrder = 5;
+                        redb.AddComponent<Test99>();
+
                         changepoint = m_data.Tok_time();
                         switch ((c + 1) / 2)
                         {
@@ -180,6 +197,13 @@ public class Mobius_con2 : MonoBehaviour
                 {
                     if (b <= m_data.Herftime / (int)m_data.tempo * ((c + 1) / 2) && Mathf.Abs(m_data.Tok_time() - changepoint) >= m_data.Herftime / (int)m_data.tempo)
                     {
+
+                        GameObject redb = Instantiate(UIbutton[0]);
+                        redb.transform.position = Vector3.zero;
+                        redb.GetComponent<SpriteRenderer>().color = Color.red;
+                        redb.GetComponent<SpriteRenderer>().sortingOrder = 5;
+                        redb.AddComponent<Test99>();
+
                         changepoint = m_data.Tok_time();
                         switch ((c + 1) / 2)
                         {
@@ -202,7 +226,8 @@ public class Mobius_con2 : MonoBehaviour
             }
             else
             {
-                if (m_data.Tok_action() >= m_data.Tok_time())
+                //巻き戻し時のすり抜け防止措置として、戻った時間分の操作の処理をする
+                while (m_data.Tok_action() >= m_data.Tok_time())
                 {
                     if (m_data.Tok_playermove() == 1)
                     {
@@ -251,7 +276,34 @@ public class Mobius_con2 : MonoBehaviour
                 n = 1;
             }
         }
-        
+
+        //UI上のオブジェクトのレイヤー順を求める
+        if (c > 0 && c < (int)m_data.tempo * 2 - 1)
+        {
+            if (n == 1)
+            {
+                if (c % 2 == 1)
+                {
+                    m_wispspr.sortingOrder = 5;
+                }
+                else
+                {
+                    m_wispspr.sortingOrder = 2;
+                }
+            }
+            else
+            {
+                if (c % 2 == 1)
+                {
+                    m_wispspr.sortingOrder = 2;
+                }
+                else
+                {
+                    m_wispspr.sortingOrder = 5;
+                }
+            }
+        }
+
         //現在いる地点の状態によってUI上のオブジェクトの位置を移動させる
         switch (m_data.ellipsemodes[c])
         {
@@ -326,7 +378,7 @@ public class Mobius_con2 : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Space)) 
         {
-            timescale = Mathf.Clamp(timescale - 0.1f, -5, -1);
+            timescale = Mathf.Clamp(timescale - 0.1f, m_data.MinTimeScale, -1);
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
@@ -377,6 +429,7 @@ public class Mobius_con2 : MonoBehaviour
         }
         else
         {
+            //巻き戻し時のすり抜けを防止するため、戻った時間の中にある全ての操作を処理する
             int[] clic = new int[(int)m_data.tempo - 1];
             while (m_data.Tok_clictime() >= m_data.Tok_time())
             {

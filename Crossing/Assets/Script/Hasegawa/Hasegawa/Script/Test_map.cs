@@ -2,14 +2,24 @@
 
 public class Test_map : MonoBehaviour
 {
-    [SerializeField] int Mapsizex = 10;
-    [SerializeField] int Mapsizey = 10;
+    [System.Serializable]
+    public struct Size
+    {
+        public int x;
+        public int y;
+    }
+
+    [SerializeField] Size Mapsize = new Size { x = 10, y = 10 };
 
     [SerializeField] Vector2 Ratio = new Vector2(1, 0.8f);
 
-    [SerializeField] Vector3 BasisPoint = new Vector3(-7.2f, 4.5f, 0);
+    [SerializeField] Vector3 BasisPoint = new Vector3(0, 0, 0);
 
     [SerializeField] GameObject mapchip = null;
+
+    [SerializeField] bool UseGoal = true;
+
+    [SerializeField] Size Goalpos = new Size { x = 5, y = 5 };
 
     [SerializeField] GameObject Goal = null;
 
@@ -19,11 +29,11 @@ public class Test_map : MonoBehaviour
 
     private int[] player = new int[2];
 
-    const float movemapy = 0;
+    const float movemapy = 0.4f;
 
     public int Tok_map(int x,int y)
     {
-        if (x < 0 || x >= Mapsizex || y < 0 || y >= Mapsizey)
+        if (x < 0 || x >= Mapsize.x || y < 0 || y >= Mapsize.y)
         {
             return -1;
         }
@@ -33,12 +43,12 @@ public class Test_map : MonoBehaviour
 
     public Vector3 Tok_pos(int x, int y)
     {
-        return new Vector3(BasisPoint.x + x * Ratio.x, BasisPoint.y - y * Ratio.y + movemapy, 0);
+        return new Vector3(BasisPoint.x + Ratio.x * x - Ratio.x * (Mapsize.x - 1) / 2, BasisPoint.y - Ratio.y * y + Ratio.y * (Mapsize.y - 1) / 2 + movemapy, 0);
     }
 
     public Vector3 Tok_pos()
     {
-        return new Vector3(BasisPoint.x + Ratio.x * player[0], BasisPoint.y - Ratio.y * player[1] + movemapy, 0);
+        return new Vector3(BasisPoint.x + Ratio.x * player[0] - Ratio.x * (Mapsize.x - 1) / 2, BasisPoint.y - Ratio.y * player[1] + Ratio.y * (Mapsize.y - 1) / 2 + movemapy, 0);
     }
 
     public void Tok_first(ref int x,ref int y)
@@ -49,15 +59,15 @@ public class Test_map : MonoBehaviour
 
     private void Awake()
     {
-        map = new int[Mapsizey, Mapsizex];
+        map = new int[Mapsize.y, Mapsize.x];
 
         if (Ratio.x <= 0) Ratio = new Vector2(1, Ratio.y);
         if (Ratio.y <= 0) Ratio = new Vector2(Ratio.x, 1);
 
         mapmother = new GameObject("mapmother");
-        for(int y = 0; y < Mapsizey; ++y)
+        for(int y = 0; y < Mapsize.y; ++y)
         {
-            for(int x = 0; x < Mapsizex; ++x)
+            for(int x = 0; x < Mapsize.x; ++x)
             {
                 if (map[y, x] == 1)
                 {
@@ -66,15 +76,19 @@ public class Test_map : MonoBehaviour
                 }
 
                 GameObject chip = Instantiate(mapchip);
-                chip.transform.position = new Vector3(BasisPoint.x + Ratio.x * x, BasisPoint.y - Ratio.y * y, 0);
+                chip.transform.position = new Vector3(BasisPoint.x + Ratio.x * x - Ratio.x * (Mapsize.x - 1) / 2f, BasisPoint.y - Ratio.y * y + Ratio.y * (Mapsize.y - 1) / 2f, 0);
                 chip.transform.localScale = new Vector3(Ratio.x, Ratio.y, 1);
                 chip.transform.parent = mapmother.transform;
             }
         }
 
-        GameObject goal = Instantiate(Goal);
-        goal.transform.position = new Vector3(BasisPoint.x + Ratio.x * 6, BasisPoint.y - Ratio.y * 6, 0);
-        goal.GetComponent<SpriteRenderer>().sortingOrder = 1;
+        if (UseGoal)
+        {
+            if(Goalpos.x<0||Goalpos.x>Mapsize.x - 1) { Goalpos.x = Mapsize.x - 1; }
+            if(Goalpos.y<0||Goalpos.y>Mapsize.y - 1) { Goalpos.y = Mapsize.y - 1; }
+            GameObject goal = Instantiate(Goal);
+            goal.transform.position = new Vector3(BasisPoint.x + Ratio.x * Goalpos.x - Ratio.x * (Mapsize.x - 1) / 2f, BasisPoint.y - Ratio.y * Goalpos.y + Ratio.y * (Mapsize.y - 1) / 2f, 0);
+            goal.GetComponent<SpriteRenderer>().sortingOrder = 1;
+        }
     }
-
 }
