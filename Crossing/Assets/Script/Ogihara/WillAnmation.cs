@@ -15,6 +15,7 @@ public class WillAnmation : MonoBehaviour
     };
 
     Animator Animator;
+    float Anim_Counter = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -22,11 +23,16 @@ public class WillAnmation : MonoBehaviour
         Animator = GetComponent<Animator>();
     }
 
-   [SerializeField] int animcount = 0;
+   [SerializeField] int animcount = 1;
 
     void Animation_Random()//アニメーションをランダムに動かす為の物
     {
-
+        Anim_Counter = Time.deltaTime;
+        if (Anim_Counter == 30)
+        {
+            animcount = 2;
+            Anim_Counter = 0;
+        }
     }
 
     void Set_Animation()//アニメーション
@@ -56,5 +62,6 @@ public class WillAnmation : MonoBehaviour
     {
         Set_Animation();
         Animation_Random();
+        Debug.Log(Anim_Counter);
     }
 }
