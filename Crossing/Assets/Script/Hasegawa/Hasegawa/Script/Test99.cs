@@ -4,6 +4,7 @@ public class Test99 : MonoBehaviour
 {
     private void Start()
     {
-        Destroy(this.gameObject, 0.1f);
+        float time = GetComponent<AudioSource>().clip.length;
+        Destroy(this.gameObject, time);
     }
 }

@@ -334,7 +334,7 @@ public class Mobius_data :MonoBehaviour
         }
         */
         //半周にかかる時間が1秒未満だったら1秒にする
-        if (Herftime < 1) Herftime = 1;
+        //if (Herftime < 1) Herftime = 1;
 
         //ステージの時間が半周にかかる時間より短い場合1周の時間にする
         if (StageTime < Herftime) StageTime = Herftime * 2;
@@ -364,10 +364,13 @@ public class Mobius_data :MonoBehaviour
 
     private void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log("movecount:" + movecount + "   changecount:" + changecount);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log(Tok_action());
         }
     }
 
