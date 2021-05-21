@@ -79,6 +79,9 @@ public class Mapcon : MonoBehaviour
         }
     }
 
+    //GameMaster取得
+    GameObject GM;
+
     //素材
     /// <summary>
     /// ノーマルブロック
@@ -228,6 +231,7 @@ public class Mapcon : MonoBehaviour
         Set_path();
         Read_all_maps();
         Create_map(0,0);
+        //GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColor
     }
 
     // Update is called once per frame

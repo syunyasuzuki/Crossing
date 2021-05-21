@@ -103,13 +103,13 @@ public class MapEdita : MonoBehaviour
         float camera_x = (Maxsize_x - 1) / 2.0f;
         float camera_y = (Maxsize_y - 1) / 2.0f * -1;
         int min = Mathf.Min(Maxsize_x, Maxsize_y);
-        float camera_size = min / 2.0f;
+        float camera_size = /*min / 2.0f*/7.8f;
         maincam.transform.position = new Vector3(camera_x, camera_y, camera_z);
         maincam.orthographicSize = camera_size;
     }
 
     /// <summary>
-    /// カメラの引き具合
+    /// カメラサイズを変更する速度
     /// </summary>
     float Move_camera_size = 1.0f;
 
