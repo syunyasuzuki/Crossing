@@ -91,8 +91,8 @@ public class Mobius_con3 : MonoBehaviour
         for (int i = 0; i < bd.Count; ++i)
         {
             bd[i].box2d.isTrigger = activ;
-            if (activ) bd[i].sr.color = new Color(1, 1, 1, 1);
-            else bd[i].sr.color = new Color(1, 1, 1, 0.3f);
+            if (activ) bd[i].sr.color = new Color(1, 1, 1, 0.3f);
+            else bd[i].sr.color = new Color(1, 1, 1, 1);
         }
     }
 
@@ -187,10 +187,10 @@ public class Mobius_con3 : MonoBehaviour
             m_ellipse[s].transform.parent = ellipsemother.transform;
         }
         m_ellipse[0] = Instantiate(UIobject_side);
-        m_ellipse[0].transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x / 2, m_data.Position.y, 0);
+        m_ellipse[0].transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2 + m_data.Pixcellforunitysize_x / 2, m_data.Position.y, 0);
         m_ellipse[0].transform.parent = ellipsemother.transform;
         m_ellipse[m_ellipse.Length - 1] = Instantiate(UIobject_side);
-        m_ellipse[m_ellipse.Length - 1].transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x / 2 + (m_data.Pixcellforunitysize_x * ((int)m_data.tempo * 2 - 1)), m_data.Position.y, 0);
+        m_ellipse[m_ellipse.Length - 1].transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2 + m_data.Pixcellforunitysize_x / 2 + (m_data.Pixcellforunitysize_x * ((int)m_data.tempo * 2 - 1)), m_data.Position.y, 0);
         m_ellipse[m_ellipse.Length - 1].transform.localScale = new Vector3(-1, 1, 1);
         m_ellipse[m_ellipse.Length - 1].transform.parent = ellipsemother.transform;
 
@@ -198,7 +198,7 @@ public class Mobius_con3 : MonoBehaviour
         for (int s = 0; s < (int)m_data.tempo - 1; ++s)
         {
             m_uibutton[s] = Instantiate(UIbutton[s]);
-            m_uibutton[s].transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x * 2 * (s + 1), m_data.Position.y, 0);
+            m_uibutton[s].transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2 + m_data.Pixcellforunitysize_x * 2 * (s + 1), m_data.Position.y, 0);
         }
 
         //UI上を移動するオブジェクトを生成
@@ -344,11 +344,11 @@ public class Mobius_con3 : MonoBehaviour
         switch (m_data.ellipsemodes[c])
         {
             case Mobius_data.EllipseMode.Normal:
-                m_wisp.transform.position = new Vector3(-m_data.UIscalex / 2 + x, m_data.Position.y + 0.8f * n, 0);
+                m_wisp.transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2 + x, m_data.Position.y + 0.8f * n, 0);
                 break;
             case Mobius_data.EllipseMode.Cross:
                 float y = Mathf.Clamp(Mathf.Sqrt((1 - Mathf.Pow(-m_data.Pixcellforunitysize_x + (m_data.Pixcellforunitysize_x * 2 / (m_data.Herftime / (int)m_data.tempo)) * (b - m_data.Herftime / (int)m_data.tempo * (c / 2)), 2) / Mathf.Pow(m_data.Pixcellforunitysize_x, 2)) * Mathf.Pow(m_data.Pixcellforunitysize_y, 2)), 0, m_data.Pixcellforunitysize_y);
-                m_wisp.transform.position = new Vector3(-m_data.UIscalex / 2 + x, m_data.Position.y + y * n, 0);
+                m_wisp.transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2 + x, m_data.Position.y + y * n, 0);
                 break;
         }
     }
