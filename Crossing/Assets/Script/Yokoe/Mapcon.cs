@@ -151,18 +151,21 @@ public class Mapcon : MonoBehaviour
             case 1:
                 GameObject wh_bl = new GameObject("wh_bl" + x + "-" + y);
                 wh_bl.AddComponent<SpriteRenderer>().sprite = Normal_block[0];
+                wh_bl.AddComponent<BoxCollider2D>();
                 wh_bl.transform.position = new Vector3(x, -y, 0.0f);
                 wh_bl.transform.parent = Map_mother.transform;
                 break;
             case 2:
                 GameObject bk_bl = new GameObject("bk_bl" + x + "_" + y);
                 bk_bl.AddComponent<SpriteRenderer>().sprite = Normal_block[1];
+                bk_bl.AddComponent<BoxCollider2D>();
                 bk_bl.transform.position = new Vector3(x, -y, 0.0f);
                 bk_bl.transform.parent = Map_mother.transform;
                 break;
             case 3:
                 GameObject red_bl = new GameObject("red_bl" + x + "-" + y);
                 red_bl.AddComponent<SpriteRenderer>().sprite = RGB_Blocks[0];
+                red_bl.AddComponent<BoxCollider2D>();
                 red_bl.transform.position = new Vector3(x, -y, 0.0f);
                 red_bl.transform.parent = Map_mother.transform;
                 red_blocks.Add(red_bl);
@@ -171,6 +174,7 @@ public class Mapcon : MonoBehaviour
             case 4:
                 GameObject gre_bl = new GameObject("gre_bl" + x + "_" + y);
                 gre_bl.AddComponent<SpriteRenderer>().sprite = RGB_Blocks[1];
+                gre_bl.AddComponent<BoxCollider2D>();
                 gre_bl.transform.position = new Vector3(x, -y, 0.0f);
                 gre_bl.transform.parent = Map_mother.transform;
                 green_blocks.Add(gre_bl);
@@ -178,6 +182,7 @@ public class Mapcon : MonoBehaviour
             case 5:
                 GameObject blue_bl = new GameObject("blue_bl" + x + "_" + y);
                 blue_bl.AddComponent<SpriteRenderer>().sprite = RGB_Blocks[2];
+                blue_bl.AddComponent<BoxCollider2D>();
                 blue_bl.transform.position = new Vector3(x, -y, 0.0f);
                 blue_bl.transform.parent = Map_mother.transform;
                 blue_blocks.Add(blue_bl);
@@ -231,7 +236,7 @@ public class Mapcon : MonoBehaviour
         Set_path();
         Read_all_maps();
         Create_map(0,0);
-        //GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColor
+        GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColorBlockData(red_blocks, green_blocks, blue_blocks);
     }
 
     // Update is called once per frame
