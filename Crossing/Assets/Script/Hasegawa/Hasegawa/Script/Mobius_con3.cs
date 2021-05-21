@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-public class Mobius_con2 : MonoBehaviour
+public class Mobius_con3 : MonoBehaviour
 {
     /// <summary>
     /// 輪のデータを取得
@@ -72,10 +74,86 @@ public class Mobius_con2 : MonoBehaviour
     /// </summary>
     private GameObject[] m_uibutton = null;
 
-    /// <summary>
-    /// プレイヤーの操作
-    /// </summary>
-    private Player_con player = null;
+    struct BlockData
+    {
+        public SpriteRenderer sr;
+        public BoxCollider2D box2d;
+    }
+
+    private List<BlockData> reddata = new List<BlockData>();
+    private List<BlockData> greendata = new List<BlockData>();
+    private List<BlockData> bluedata = new List<BlockData>();
+
+    void SetColorandCollider(ref List<BlockData> bd, bool activ)
+    {
+        if (bd.Count == 0 || bd == null) return;
+
+        for (int i = 0; i < bd.Count; ++i)
+        {
+            bd[i].box2d.isTrigger = activ;
+            if (activ) bd[i].sr.color = new Color(1, 1, 1, 1);
+            else bd[i].sr.color = new Color(1, 1, 1, 0.3f);
+        }
+    }
+
+    public void SetColorBlockData(List<GameObject> red, List<GameObject> green, List<GameObject> blue)
+    {
+        for(int r = 0; r < red.Count; ++r)
+        {
+            reddata.Add(new BlockData { sr = red[r].GetComponent<SpriteRenderer>(), box2d = red[r].GetComponent<BoxCollider2D>() });
+        }
+        SetColorandCollider(ref reddata, true);
+        for(int g = 0; g < green.Count; ++g)
+        {
+            greendata.Add(new BlockData { sr = red[g].GetComponent<SpriteRenderer>(), box2d = red[g].GetComponent<BoxCollider2D>() });
+        }
+        SetColorandCollider(ref greendata, true);
+        for(int b = 0; b < blue.Count; ++b)
+        {
+            bluedata.Add(new BlockData { sr = red[b].GetComponent<SpriteRenderer>(), box2d = red[b].GetComponent<BoxCollider2D>() });
+        }
+        SetColorandCollider(ref bluedata, true);
+    }
+
+    enum BlockColor
+    {
+        None = -1,
+        RED = 0,
+        GREEN = 1,
+        BLUE = 2
+    }
+
+    BlockColor now_color = BlockColor.None;
+
+    void ChangeBlock(BlockColor bc)
+    {
+        Debug.Log(bc.ToString());
+        switch (now_color)
+        {
+            case BlockColor.RED:
+                SetColorandCollider(ref reddata, true);
+                break;
+            case BlockColor.GREEN:
+                SetColorandCollider(ref greendata, true);
+                break;
+            case BlockColor.BLUE:
+                SetColorandCollider(ref bluedata, true);
+                break;
+        }
+        now_color = bc;
+        switch (now_color)
+        {
+            case BlockColor.RED:
+                SetColorandCollider(ref reddata, false);
+                break;
+            case BlockColor.GREEN:
+                SetColorandCollider(ref greendata, false);
+                break;
+            case BlockColor.BLUE:
+                SetColorandCollider(ref bluedata, false);
+                break;
+        }
+    }
 
     /// <summary>
     /// 輪を作成する
@@ -92,7 +170,7 @@ public class Mobius_con2 : MonoBehaviour
 
         //UIを生成
         ellipsemother = new GameObject("Ellipsemother");
-        for(int s = 1; s < (int)m_data.tempo * 2 - 1; ++s)
+        for (int s = 1; s < (int)m_data.tempo * 2 - 1; ++s)
         {
             m_ellipse[s] = Instantiate(UIobject_middle);
             m_spren[s] = m_ellipse[s].GetComponent<SpriteRenderer>();
@@ -117,7 +195,7 @@ public class Mobius_con2 : MonoBehaviour
         m_ellipse[m_ellipse.Length - 1].transform.parent = ellipsemother.transform;
 
         //ボタンを生成
-        for(int s = 0; s < (int)m_data.tempo - 1; ++s)
+        for (int s = 0; s < (int)m_data.tempo - 1; ++s)
         {
             m_uibutton[s] = Instantiate(UIbutton[s]);
             m_uibutton[s].transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x * 2 * (s + 1), m_data.Position.y, 0);
@@ -127,9 +205,6 @@ public class Mobius_con2 : MonoBehaviour
         m_wisp = Instantiate(UIobject_wisp);
         m_wisp.transform.position = new Vector3(m_data.Position.x - m_data.UIscalex / 2, m_data.Position.y, 0);
         m_wispspr = m_wisp.GetComponent<SpriteRenderer>();
-
-        //プレイヤーを参照する
-        player = GetComponent<Player_con>();
     }
 
     /// <summary>
@@ -144,11 +219,6 @@ public class Mobius_con2 : MonoBehaviour
     private int wispmovevec = 1;
 
     /// <summary>
-    /// 進行方向
-    /// </summary>
-    private int turnvec = 0;
-
-    /// <summary>
     /// UI上のオブジェクトの処理
     /// </summary>
     private void Wisp_task()
@@ -160,14 +230,14 @@ public class Mobius_con2 : MonoBehaviour
         float a = m_data.Tok_time() % (m_data.Herftime * 2);
         //現在いる地点が半周を超えている場合半周での値に変換する
         float b = a;
-        if(a > m_data.Herftime)
+        if (a > m_data.Herftime)
         {
             b = m_data.Herftime + (m_data.Herftime - a);
         }
         //x軸上で現在どこにいるかを求める
         float x = m_data.UIscalex / m_data.Herftime * b;
         //UIを細かく分けた際に現在どの地点にいるかを求める
-        int c=Mathf.Clamp(Mathf.FloorToInt(x/(m_data.UIscalex/((int)m_data.tempo*2))),0,(int)m_data.tempo*2-1);
+        int c = Mathf.Clamp(Mathf.FloorToInt(x / (m_data.UIscalex / ((int)m_data.tempo * 2))), 0, (int)m_data.tempo * 2 - 1);
 
         //交点を通過した際に回転方向を変える
         if (m_data.Movewisp)
@@ -187,16 +257,13 @@ public class Mobius_con2 : MonoBehaviour
                         switch ((c + 1) / 2)
                         {
                             case 1:
-                                m_data.MoveCount(player.Move(1), 1);
+                                ChangeBlock(BlockColor.RED);
                                 break;
                             case 2:
-                                m_data.MoveCount(player.Jump(1), 2);
+                                ChangeBlock(BlockColor.GREEN);
                                 break;
                             case 3:
-                                if (--turnvec < 0) { turnvec = 3; }
-                                m_uibutton[0].transform.localRotation = Quaternion.Euler(0, 0, 90 * turnvec);
-                                player.Turn(turnvec);
-                                m_data.MoveCount(1, 3);
+                                ChangeBlock(BlockColor.BLUE);
                                 break;
                         }
                         wispmovevec *= -1;
@@ -215,16 +282,13 @@ public class Mobius_con2 : MonoBehaviour
                         switch ((c + 1) / 2)
                         {
                             case 1:
-                                m_data.MoveCount(player.Move(1), 1);
+                                ChangeBlock(BlockColor.RED);
                                 break;
                             case 2:
-                                m_data.MoveCount(player.Jump(1), 2);
+                                ChangeBlock(BlockColor.GREEN);
                                 break;
                             case 3:
-                                if (--turnvec < 0) { turnvec = 3; }
-                                m_uibutton[0].transform.localRotation = Quaternion.Euler(0, 0, 90 * turnvec);
-                                player.Turn(turnvec);
-                                m_data.MoveCount(1, 3);
+                                ChangeBlock(BlockColor.BLUE);
                                 break;
                         }
                         wispmovevec *= -1;
@@ -242,15 +306,13 @@ public class Mobius_con2 : MonoBehaviour
                     switch (m_data.Tok_playeraction())
                     {
                         case 1:
-                            player.Move(-1);
+
                             break;
                         case 2:
-                            player.Jump(-1);
+
                             break;
                         case 3:
-                            if (++turnvec > 3) { turnvec = 0; }
-                            m_uibutton[0].transform.localRotation = Quaternion.Euler(0, 0, 90 * turnvec);
-                            player.Turn(turnvec);
+
                             break;
                     }
                 }
@@ -285,7 +347,7 @@ public class Mobius_con2 : MonoBehaviour
                 m_wisp.transform.position = new Vector3(-m_data.UIscalex / 2 + x, m_data.Position.y + 0.8f * n, 0);
                 break;
             case Mobius_data.EllipseMode.Cross:
-                float y = Mathf.Clamp(Mathf.Sqrt((1 - Mathf.Pow(-m_data.Pixcellforunitysize_x + (m_data.Pixcellforunitysize_x * 2 / (m_data.Herftime / (int)m_data.tempo)) * (b - m_data.Herftime / (int)m_data.tempo * (c / 2)), 2) / Mathf.Pow(m_data.Pixcellforunitysize_x, 2)) * Mathf.Pow(m_data.Pixcellforunitysize_y, 2)),0,m_data.Pixcellforunitysize_y);
+                float y = Mathf.Clamp(Mathf.Sqrt((1 - Mathf.Pow(-m_data.Pixcellforunitysize_x + (m_data.Pixcellforunitysize_x * 2 / (m_data.Herftime / (int)m_data.tempo)) * (b - m_data.Herftime / (int)m_data.tempo * (c / 2)), 2) / Mathf.Pow(m_data.Pixcellforunitysize_x, 2)) * Mathf.Pow(m_data.Pixcellforunitysize_y, 2)), 0, m_data.Pixcellforunitysize_y);
                 m_wisp.transform.position = new Vector3(-m_data.UIscalex / 2 + x, m_data.Position.y + y * n, 0);
                 break;
         }
@@ -329,7 +391,7 @@ public class Mobius_con2 : MonoBehaviour
         //UIを細かく分けた際に現在どの地点にいるかを求める
         int c = Mathf.Clamp(Mathf.FloorToInt(x / (m_data.UIscalex / ((int)m_data.tempo * 2))), 0, (int)m_data.tempo * 2 - 1);
 
-        if (c != 0 &&(c - 1) / 2 * 2 + 1 == n) return;
+        if (c != 0 && (c - 1) / 2 * 2 + 1 == n) return;
 
         m_data.ChangeCount(n);
         ChangeUISprite(n);
@@ -344,13 +406,13 @@ public class Mobius_con2 : MonoBehaviour
         if (!m_data.IsMoveUI) return;
 
         //時間を加算
-        if (Input.GetKeyDown(KeyCode.Space)) 
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             m_data.Movewisp = false;
             timescale = -1;
             changepoint = -1;
         }
-        if (Input.GetKey(KeyCode.Space)) 
+        if (Input.GetKey(KeyCode.Space))
         {
             timescale = Mathf.Clamp(timescale - 0.1f, m_data.MinTimeScale, -1);
         }
@@ -366,7 +428,8 @@ public class Mobius_con2 : MonoBehaviour
         if (m_data.Movewisp && m_data.Tok_time() < m_data.StageTime)
         {
             //マウス
-            if (Input.GetMouseButtonDown(0)){
+            if (Input.GetMouseButtonDown(0))
+            {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
                 if (hit.collider != null)
