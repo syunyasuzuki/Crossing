@@ -103,14 +103,14 @@ public class Mapcon : MonoBehaviour
     /// 1回でもマップを生成したか
     /// </summary>
     bool create_map = false;
-    /// <summary>
-    /// 現在使っているワールド番号
-    /// </summary>
-    int now_world = 0;
-    /// <summary>
-    /// 現在使っているステージ番号
-    /// </summary>
-    int now_stage = 0;
+    ///// <summary>
+    ///// 現在使っているワールド番号
+    ///// </summary>
+    //int now_world = 0;
+    ///// <summary>
+    ///// 現在使っているステージ番号
+    ///// </summary>
+    //int now_stage = 0;
     /// <summary>
     /// 現在使っているマップ
     /// </summary>

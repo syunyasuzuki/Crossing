@@ -27,6 +27,9 @@ public class MapEdita : MonoBehaviour
         fipath = Path.Combine(fopath, "mapdata.txt");
     }
 
+    /// <summary>
+    /// フォルダーとファイルが存在するか確認、存在しない場合作成する
+    /// </summary>
     void Folder_File_check_andCreate()
     {
         //テキストの書き込み
@@ -114,6 +117,11 @@ public class MapEdita : MonoBehaviour
     float Move_camera_size = 1.0f;
 
     /// <summary>
+    /// カメラの移動速度
+    /// </summary>
+    float Move_camera_xy = 0.05f;
+
+    /// <summary>
     /// カメラの位置を調整
     /// </summary>
     void Set_camera()
@@ -121,6 +129,12 @@ public class MapEdita : MonoBehaviour
         float scr = Input.GetAxisRaw("Mouse ScrollWheel");
         float camsize = Move_camera_size * scr;
         maincam.orthographicSize = maincam.orthographicSize + camsize;
+        int x = 0, y = 0;
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) { x -= 1; }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) { x += 1; }
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) { y += 1; }
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) { y -= 1; }
+        transform.position = new Vector3(transform.position.x + Move_camera_xy * x, transform.position.y + Move_camera_xy * y, transform.position.z);
     }
 
     /// <summary>
@@ -128,6 +142,9 @@ public class MapEdita : MonoBehaviour
     /// </summary>
     GameObject mouse_point;
 
+    /// <summary>
+    /// マウスポインタの作成
+    /// </summary>
     void Create_mouse_point()
     {
         mouse_point = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -169,7 +186,7 @@ public class MapEdita : MonoBehaviour
     int[,,] map;
 
     /// <summary>
-    /// intの桁数を調べる
+    /// intの桁数を調べる(何文字入力したか確認)
     /// </summary>
     int Int_length(int n)
     {
@@ -184,13 +201,13 @@ public class MapEdita : MonoBehaviour
         map = new int[Maxmap_num, Maxsize_y, Maxsize_x];
     }
 
-    /// <summary>
-    /// 配列を再度確保しなおす
-    /// </summary>
-    void Reset_setting()
-    {
+    ///// <summary>
+    ///// 配列を再度確保しなおす
+    ///// </summary>
+    //void Reset_setting()
+    //{
 
-    }
+    //}
 
     /// <summary>
     /// 読み込んだデータから空白を消す
@@ -214,7 +231,7 @@ public class MapEdita : MonoBehaviour
     {
         for (int i = 0; i < n; ++i)
         {
-            //変換するためにデータを入れる
+            //変換するためのデータを入れる
             string[] str1 = new string[Maxsize_y];
             for (int lu = 0; lu < Maxsize_y; ++lu)
             {
@@ -295,8 +312,6 @@ public class MapEdita : MonoBehaviour
         {
             for (int lu = 0; lu < Maxsize_x; ++lu)
             {
-                Debug.Log(map_num + "," + i + "," + lu);
-                //Debug.Log(map[map_num,i,lu]);
                 if (map[map_num, i, lu] != 0) 
                 {
                     GameObject ob = Instantiate(bc[map[map_num, i, lu]]);
@@ -309,7 +324,7 @@ public class MapEdita : MonoBehaviour
     }
 
     /// <summary>
-    /// マップ一括削除
+    /// マップを一括削除
     /// </summary>
     void Delete_Map()
     {
@@ -319,7 +334,7 @@ public class MapEdita : MonoBehaviour
 
 
     /// <summary>
-    /// ファイルを読み込む
+    /// ファイルを一括で読み込む
     /// </summary>
     void Read_data()
     {
@@ -357,7 +372,6 @@ public class MapEdita : MonoBehaviour
         //マップ情報を確定
         for (int i = 0; i < map_n; ++i)
         {
-            Debug.Log("dd");
             int subint = Maxsize_y * i;
             for (int lu = 0; lu < Maxsize_y; ++lu)
             {
@@ -382,7 +396,10 @@ public class MapEdita : MonoBehaviour
     //1つ目のボタンの位置
     int px = 400;
     int px_num = 0;
-    //現在選択されているボタン
+    /// <summary>
+    /// 現在選択されているボタン
+    /// </summary>
+    /// <param name="x">マップの最大数</param>
     void Set_UIpos(int x)
     {
         px_num = x;
@@ -401,19 +418,26 @@ public class MapEdita : MonoBehaviour
     /// </summary>
     int max_button = 8;
 
-    // 最大入力数を指定
+    /// <summary>
+    /// 最大入力数を指定
+    /// </summary>
     void GUI_setting()
     {
         max_text_num = Int_length(Maxmap_num);//何文字まで打てるか
     }
 
-    // 入力処理を書き換え
+    /// <summary>
+    /// 入力処理を書き換え
+    /// </summary>
+    /// <param name="n"></param>
     void Set_text_num(int n)
     {
         text_num = "" + n;
     }
 
-    //入力処理の確定
+    /// <summary>
+    /// 入力処理の確定
+    /// </summary>
     void Set_text_num()
     {
         //同じマップを指定した時に大きさを変える
@@ -446,7 +470,12 @@ public class MapEdita : MonoBehaviour
         "空白","","","","","","",""
     };
 
-    //テクスチャを切り抜いて返す
+    /// <summary>
+    /// テクスチャを切り抜いて返す
+    /// </summary>
+    /// <param name="x">x座標のどこから切り抜くか</param>
+    /// <param name="y">y座標のどこから切り抜くか</param>
+    /// <returns></returns>
     Texture2D Slice_Texture2D(int x, int y)
     {
         Color[] pix = new Color[50 * 50];
@@ -462,7 +491,9 @@ public class MapEdita : MonoBehaviour
         return slice_tex;
     }
 
-    //切り抜き場所を指定
+    /// <summary>
+    /// 切り抜き場所を指定
+    /// </summary>
     void Set_textures()
     {
         Sliced_texture[0] = default;
@@ -475,7 +506,9 @@ public class MapEdita : MonoBehaviour
         Sliced_texture[7] = player;
     }
 
-    //UIを作成
+    /// <summary>
+    /// UIを作成
+    /// </summary>
     void OnGUI()
     {
         //画面の比率に応じてサイズが変わるように
@@ -534,12 +567,6 @@ public class MapEdita : MonoBehaviour
         Create_mouse_point();
         Create_Mapgrid();
         Set_textures();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
     }
 
     /// <summary>
