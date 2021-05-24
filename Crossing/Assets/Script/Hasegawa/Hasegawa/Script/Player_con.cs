@@ -12,7 +12,20 @@ public class Player_con : MonoBehaviour
     /// </summary>
     [SerializeField] GameObject Player_prefab = null;
 
+    /// <summary>
+    /// 各方向を向いたプレイヤー
+    /// </summary>
+    [SerializeField] Sprite[] Player_sprite = new Sprite[4];
+
+    /// <summary>
+    /// 生成したプレイヤー
+    /// </summary>
     private GameObject Player = null;
+
+    /// <summary>
+    /// 生成したプレイヤーのSpriteRenderer
+    /// </summary>
+    private SpriteRenderer Player_spr = null;
 
     /// <summary>
     /// Int型のベクター2
@@ -42,7 +55,7 @@ public class Player_con : MonoBehaviour
         map.Tok_first(ref playerposition.x, ref playerposition.y);
         Player = Instantiate(Player_prefab);
         Player.transform.position = map.Tok_pos();
-        Player.GetComponent<SpriteRenderer>().color = Color.cyan;
+        Player_spr = Player.GetComponent<SpriteRenderer>();
     }
 
     /// <summary>
@@ -84,9 +97,9 @@ public class Player_con : MonoBehaviour
     /// </summary>
     public void Turn(int x)
     {
+        Player_spr.sprite = Player_sprite[x];
         playervector.x = x == 0 ? 1 : x == 2 ? -1 : 0;
         playervector.y = x == 1 ? -1 : x == 3 ? 1 : 0;
-        Player.transform.localRotation = Quaternion.Euler(0, 0, 90 * x);
     }
 
     /// <summary>

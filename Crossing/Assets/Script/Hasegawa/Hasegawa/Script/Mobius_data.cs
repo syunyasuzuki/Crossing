@@ -19,6 +19,22 @@ public class Mobius_data :MonoBehaviour
     public Tenpo tempo = Tenpo.Four;
 
     /// <summary>
+    /// 曲を再生する場合曲を追加
+    /// </summary>
+    [SerializeField] AudioClip music = null;
+
+    /// <summary>
+    /// 曲のBPMを設定
+    /// 曲がない場合設定は無効化される
+    /// </summary>
+    [SerializeField] int bpm = 120;
+
+    /// <summary>
+    /// 合計小節数
+    /// </summary>
+    int Maxbeat = 0;
+
+    /// <summary>
     /// ステージの時間
     /// </summary>
     public float StageTime = 90;
@@ -34,9 +50,13 @@ public class Mobius_data :MonoBehaviour
     public bool IsTimeCount = true;
 
     /// <summary>
+    /// 時間の戻る最大倍率
+    /// </summary>
+    public float MinTimeScale = -10;
+
+    /// <summary>
     /// 現在の時間を知る
     /// </summary>
-    /// <returns></returns>
     public float Tok_time()
     {
         return time;
@@ -293,17 +313,28 @@ public class Mobius_data :MonoBehaviour
     /// <summary>
     /// UIの縦の大きさをUnityに合わせたもの
     /// </summary>
-    public float Pixcellforunitysize_y { get; } = 1f / 50f * 39;
+    public float Pixcellforunitysize_y { get; } = 1f / 50 * 39;
 
     /// <summary>
     /// UIの横の大きさをUnityに合わせたもの
     /// </summary>
-    public float Pixcellforunitysize_x { get; } = 1f / 50f * 60;
+    public float Pixcellforunitysize_x { get; } = 1f / 50 * 60;
 
     void Awake()
     {
+        /*
+        if (music)
+        {
+            StageTime = music.length;
+            Maxbeat = Mathf.FloorToInt(StageTime * bpm) / (int)tempo;
+
+        }
+        else
+        {
+        }
+        */
         //半周にかかる時間が1秒未満だったら1秒にする
-        if (Herftime < 1) Herftime = 1;
+        //if (Herftime < 1) Herftime = 1;
 
         //ステージの時間が半周にかかる時間より短い場合1周の時間にする
         if (StageTime < Herftime) StageTime = Herftime * 2;
@@ -312,7 +343,7 @@ public class Mobius_data :MonoBehaviour
         Position = transform.position;
 
         //UIの横の大きさを確定
-        UIscalex = Pixcellforunitysize_x * (int)tempo * 2;
+        UIscalex = (float)System.Math.Round(Pixcellforunitysize_x * (int)tempo * 2, 1);
 
         //配列の確保
         ellipsemodes = new EllipseMode[(int)tempo * 2];
@@ -333,10 +364,13 @@ public class Mobius_data :MonoBehaviour
 
     private void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log("movecount:" + movecount + "   changecount:" + changecount);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log(Tok_action());
         }
     }
 
