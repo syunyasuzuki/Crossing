@@ -105,12 +105,12 @@ public class Mobius_con3 : MonoBehaviour
         SetColorandCollider(ref reddata, true);
         for(int g = 0; g < green.Count; ++g)
         {
-            greendata.Add(new BlockData { sr = red[g].GetComponent<SpriteRenderer>(), box2d = red[g].GetComponent<BoxCollider2D>() });
+            greendata.Add(new BlockData { sr = green[g].GetComponent<SpriteRenderer>(), box2d = green[g].GetComponent<BoxCollider2D>() });
         }
         SetColorandCollider(ref greendata, true);
         for(int b = 0; b < blue.Count; ++b)
         {
-            bluedata.Add(new BlockData { sr = red[b].GetComponent<SpriteRenderer>(), box2d = red[b].GetComponent<BoxCollider2D>() });
+            bluedata.Add(new BlockData { sr = blue[b].GetComponent<SpriteRenderer>(), box2d = blue[b].GetComponent<BoxCollider2D>() });
         }
         SetColorandCollider(ref bluedata, true);
     }
