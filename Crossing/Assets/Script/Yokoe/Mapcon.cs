@@ -86,11 +86,11 @@ public class Mapcon : MonoBehaviour
     /// <summary>
     /// ノーマルブロック
     /// </summary>
-    [SerializeField] Sprite[] Normal_block = new Sprite[2];
+    [SerializeField] Sprite[] Normal_blocks = new Sprite[2];
     /// <summary>
     /// 各マップチップの素材
     /// </summary>
-    [SerializeField] Sprite[] RGB_Blocks = new Sprite[3];
+    [SerializeField] Sprite[] RGB_blocks = new Sprite[3];
     /// <summary>
     /// 各プレハブ
     /// </summary>
@@ -134,72 +134,29 @@ public class Mapcon : MonoBehaviour
     List<GameObject> green_blocks = new List<GameObject>();
     List<GameObject> blue_blocks = new List<GameObject>();
 
-
+    Vector3 obj_scale = new Vector3(1, 1, 1);
+    int sort_layer = 0;
 
     /// <summary>
-    /// 指定されたチップを生成
+    /// マップチップ作成
     /// </summary>
-    /// <param name="x"> マップサイズ x</param>
-    /// <param name="y"> マップサイズ y</param>
-    /// <param name="n">生成するオブジェクトの番号</param>
-    public void Create_chip(int x, int y, int n)
+    /// <param name="name">オブジェクトの名前</param>
+    /// <param name="sprite">オブジェクトのスプライト</param>
+    /// <param name="sortn">オブジェクトのレイヤー</param>
+    /// <param name="pos">オブジェクトの座標</param>
+    /// <param name="scale">オブジェクトの大きさ</param>
+    /// <returns>作成したマップチップ</returns>
+    GameObject Create_Chip(string name,ref Sprite sprt,int sortn,Vector3 pos,Vector3 scale)
     {
-        switch (n)
-        {
-            case 0:
-                break;
-            case 1:
-                GameObject wh_bl = new GameObject("wh_bl" + x + "-" + y);
-                wh_bl.AddComponent<SpriteRenderer>().sprite = Normal_block[0];
-                wh_bl.AddComponent<BoxCollider2D>();
-                wh_bl.transform.position = new Vector3(x, -y, 0.0f);
-                wh_bl.transform.parent = Map_mother.transform;
-                break;
-            case 2:
-                GameObject bk_bl = new GameObject("bk_bl" + x + "_" + y);
-                bk_bl.AddComponent<SpriteRenderer>().sprite = Normal_block[1];
-                bk_bl.AddComponent<BoxCollider2D>();
-                bk_bl.transform.position = new Vector3(x, -y, 0.0f);
-                bk_bl.transform.parent = Map_mother.transform;
-                break;
-            case 3:
-                GameObject red_bl = new GameObject("red_bl" + x + "-" + y);
-                red_bl.AddComponent<SpriteRenderer>().sprite = RGB_Blocks[0];
-                red_bl.AddComponent<BoxCollider2D>();
-                red_bl.transform.position = new Vector3(x, -y, 0.0f);
-                red_bl.transform.parent = Map_mother.transform;
-                red_blocks.Add(red_bl);
+        GameObject ob = new GameObject(name);
+        ob.AddComponent<SpriteRenderer>().sprite = sprt;
+        ob.GetComponent<SpriteRenderer>().sortingOrder = sortn;
+        ob.AddComponent<BoxCollider2D>();
+        ob.transform.position = pos;
+        ob.transform.localScale = scale;
+        ob.transform.parent = Map_mother.transform;
 
-                break;
-            case 4:
-                GameObject gre_bl = new GameObject("gre_bl" + x + "_" + y);
-                gre_bl.AddComponent<SpriteRenderer>().sprite = RGB_Blocks[1];
-                gre_bl.AddComponent<BoxCollider2D>();
-                gre_bl.transform.position = new Vector3(x, -y, 0.0f);
-                gre_bl.transform.parent = Map_mother.transform;
-                green_blocks.Add(gre_bl);
-                break;
-            case 5:
-                GameObject blue_bl = new GameObject("blue_bl" + x + "_" + y);
-                blue_bl.AddComponent<SpriteRenderer>().sprite = RGB_Blocks[2];
-                blue_bl.AddComponent<BoxCollider2D>();
-                blue_bl.transform.position = new Vector3(x, -y, 0.0f);
-                blue_bl.transform.parent = Map_mother.transform;
-                blue_blocks.Add(blue_bl);
-                break;
-            case 6:
-                GameObject goal = Instantiate(Map_pre[0]);
-                goal.transform.position = new Vector3(x, -y, 0.0f);
-                goal.transform.parent = Map_mother.transform;
-                break;
-            case 7:
-                GameObject player = Instantiate(Map_pre[1]);
-                player.transform.position = new Vector3(x, -y, 0.0f);
-                player.transform.parent = Map_mother.transform;
-                break;
-
-        }
-
+        return ob;
     }
 
     /// <summary>
@@ -214,8 +171,38 @@ public class Mapcon : MonoBehaviour
         {
             for (int na = 0; na < Mapsize_x; ++na)
             {
-                Create_chip(na, lu, now_map[lu, na] = map[w, s, lu, na]);
-                
+                //Create_chip(na, lu, now_map[lu, na] = map[w, s, lu, na]);
+                 switch (now_map[lu, na] = map[w, s, lu, na])
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        Create_Chip("wh_bl", ref Normal_blocks[0], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale);
+                        break;
+                    case 2:
+                        Create_Chip("black_bl", ref Normal_blocks[1], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale);
+                        break;
+                    case 3:
+                        red_blocks.Add(Create_Chip("red_bl", ref RGB_blocks[0], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale));
+                        break;
+                    case 4:
+                        green_blocks.Add(Create_Chip("green_bl", ref RGB_blocks[1], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale));
+                        break;
+                    case 5:
+                        blue_blocks.Add(Create_Chip("blue_bl", ref RGB_blocks[2], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale));
+                        break;
+                    case 6:
+                        GameObject goal = Instantiate(Map_pre[0]);
+                        goal.transform.position = new Vector3(na, -lu, 0.0f);
+                        goal.transform.parent = Map_mother.transform;
+                        break;
+                    case 7:
+                        GameObject player = Instantiate(Map_pre[1]);
+                        player.transform.position = new Vector3(na, -lu, 0.0f);
+                        player.transform.parent = Map_mother.transform;
+                        break;
+
+                }
             }
         }
         create_map = true;
@@ -237,11 +224,5 @@ public class Mapcon : MonoBehaviour
         Read_all_maps();
         Create_map(0,0);
         GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColorBlockData(red_blocks, green_blocks, blue_blocks);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
