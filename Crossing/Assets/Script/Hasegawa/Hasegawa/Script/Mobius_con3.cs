@@ -143,14 +143,20 @@ public class Mobius_con3 : MonoBehaviour
         now_color = bc;
         switch (now_color)
         {
+            case BlockColor.None:
+                m_wispspr.color = new Color(1, 1, 1, 1);
+                break;
             case BlockColor.RED:
                 SetColorandCollider(ref reddata, false);
+                m_wispspr.color = new Color(1, 0, 0, 1);
                 break;
             case BlockColor.GREEN:
                 SetColorandCollider(ref greendata, false);
+                m_wispspr.color = new Color(0, 1, 0, 1);
                 break;
             case BlockColor.BLUE:
                 SetColorandCollider(ref bluedata, false);
+                m_wispspr.color = new Color(0, 0, 1, 1);
                 break;
         }
     }
@@ -250,22 +256,27 @@ public class Mobius_con3 : MonoBehaviour
                     {
                         Instantiate(CrossAudio);
                         GameObject go = Instantiate(CrossEffect);
-                        go.transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x * 2 * ((c + 1) / 2), m_data.Position.y, 0);
-                        Destroy(go.gameObject, 0.3f);
-
                         changepoint = m_data.Tok_time();
                         switch ((c + 1) / 2)
                         {
                             case 1:
                                 ChangeBlock(BlockColor.RED);
+                                m_data.MoveCount(1, 1);
+                                go.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 1);
                                 break;
                             case 2:
                                 ChangeBlock(BlockColor.GREEN);
+                                m_data.MoveCount(1, 2);
+                                go.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 1);
                                 break;
                             case 3:
                                 ChangeBlock(BlockColor.BLUE);
+                                m_data.MoveCount(1, 3);
+                                go.GetComponent<SpriteRenderer>().color = new Color(0, 0, 1, 1);
                                 break;
                         }
+                        go.transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x * 2 * ((c + 1) / 2), m_data.Position.y, 0);
+                        Destroy(go.gameObject, 0.3f);
                         wispmovevec *= -1;
                     }
                 }
@@ -275,22 +286,27 @@ public class Mobius_con3 : MonoBehaviour
                     {
                         Instantiate(CrossAudio);
                         GameObject go = Instantiate(CrossEffect);
-                        go.transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x * 2 * ((c + 1) / 2), m_data.Position.y, 0);
-                        Destroy(go.gameObject, 0.3f);
-
                         changepoint = m_data.Tok_time();
                         switch ((c + 1) / 2)
                         {
                             case 1:
                                 ChangeBlock(BlockColor.RED);
+                                m_data.MoveCount(1, 1);
+                                go.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 1);
                                 break;
                             case 2:
                                 ChangeBlock(BlockColor.GREEN);
+                                m_data.MoveCount(1, 2);
+                                go.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 1);
                                 break;
                             case 3:
                                 ChangeBlock(BlockColor.BLUE);
+                                m_data.MoveCount(1, 3);
+                                go.GetComponent<SpriteRenderer>().color = new Color(0, 0, 1, 1);
                                 break;
                         }
+                        go.transform.position = new Vector3(-m_data.UIscalex / 2 - m_data.Position.x + m_data.Pixcellforunitysize_x * 2 * ((c + 1) / 2), m_data.Position.y, 0);
+                        Destroy(go.gameObject, 0.3f);
                         wispmovevec *= -1;
                     }
                 }
@@ -306,19 +322,20 @@ public class Mobius_con3 : MonoBehaviour
                     switch (m_data.Tok_playeraction())
                     {
                         case 1:
-
+                            ChangeBlock(BlockColor.RED);
                             break;
                         case 2:
-
+                            ChangeBlock(BlockColor.GREEN);
                             break;
                         case 3:
-
+                            ChangeBlock(BlockColor.BLUE);
                             break;
                     }
                 }
                 wispmovevec *= -1;
                 m_data.Delete_ActionRecord();
             }
+            if (m_data.Tok_action() == -1) ChangeBlock(BlockColor.None);
         }
 
         //UI上のオブジェクトが上弦にいるか下弦にいるか求める
