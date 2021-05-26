@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Player_ctr : MonoBehaviour
 {
+    float player_scale = 0;
+
+    public void Setplayer_scale(float scale)
+    {
+        player_scale = scale;
+    }
+
+
     Rigidbody2D rg2D;
 
     Animator anima;
@@ -96,7 +104,7 @@ public class Player_ctr : MonoBehaviour
         //プレイヤーの向きを変える
         if (move_x != 0)
         {
-            transform.localScale = new Vector3(move_x, 1, 1);
+            transform.localScale = new Vector3(move_x * player_scale, player_scale, 1);
         }
     }
 }

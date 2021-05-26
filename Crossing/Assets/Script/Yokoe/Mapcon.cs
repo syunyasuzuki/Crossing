@@ -40,17 +40,6 @@ public class Mapcon : MonoBehaviour
     /// </summary>
     const int Mapsize_y = 10;
 
-    ///// <summary>
-    ///// マップの大きさを返す
-    ///// </summary>
-    ///// <param name="x"></param>
-    ///// <param name="y"></param>
-    //public void Read_mapsize(ref int x, ref int y)
-    //{
-    //    x = Mapsize_x;
-    //    y = Mapsize_y;
-    //}
-
     /// <summary>
     /// 全てのマップデータ
     /// </summary>
@@ -110,26 +99,13 @@ public class Mapcon : MonoBehaviour
     /// 現在使っているマップ
     /// </summary>
     int[,] now_map = new int[Mapsize_y, Mapsize_x];
-    ///// <summary>
-    ///// 現在使っているマップの指定されたマップ情報を返す
-    ///// </summary>
-    ///// <param name="x"></param>
-    ///// <param name="y"></param>
-    ///// <returns></returns>
-    //public int Read_mapchip(int x,int y)
-    //{
-    //    if (x < 0 || x > Mapsize_x || y < 0 || y > Mapsize_y)
-    //    {
-    //        return 1;
-    //    }
-    //    return now_map[y, x];
-    //}
 
     List<GameObject> red_blocks = new List<GameObject>();
     List<GameObject> green_blocks = new List<GameObject>();
     List<GameObject> blue_blocks = new List<GameObject>();
 
-    Vector3 obj_scale = new Vector3(1, 1, 1);
+    [SerializeField] Vector3 Map_pos = new Vector3(0, 0, 0);
+    [SerializeField]Vector3 obj_scale = new Vector3(1, 1, 1);
     int sort_layer = 0;
 
     /// <summary>
@@ -162,38 +138,47 @@ public class Mapcon : MonoBehaviour
     public void Create_map(int w,int s)
     {
         Map_mother = new GameObject("map_mother");
+        //マップの一番左上の座標を求める
+        Vector3 Map_pos2 = new Vector3(Map_pos.x - Mapsize_x * obj_scale.x / 2 + obj_scale.x / 2,
+            Map_pos.y + Mapsize_y * obj_scale.y / 2 + obj_scale.y / 2, 0);
+
         for (int lu = 0; lu < Mapsize_y; ++lu)
         {
             for (int na = 0; na < Mapsize_x; ++na)
             {
+                //オブジェクトの座標を求める（）
+                Vector3 obj_pos = new Vector3(na * obj_scale.x, -lu * obj_scale.y, 0);
                  switch (now_map[lu, na] = map[w, s, lu, na])
                 {
                     case 0:
                         break;
                     case 1:
-                        Create_Chip("wh_bl" + na + " - " + lu, ref Normal_blocks[0], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale);
+                        Create_Chip("wh_bl" + na + " - " + lu, ref Normal_blocks[0], sort_layer, Map_pos2 + obj_pos, obj_scale);
                         break;
                     case 2:
-                        Create_Chip("black_bl" + na + " - " + lu, ref Normal_blocks[1], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale);
+                        Create_Chip("black_bl" + na + " - " + lu, ref Normal_blocks[1], sort_layer, Map_pos2 + obj_pos, obj_scale);
                         break;
                     case 3:
-                        red_blocks.Add(Create_Chip("red_bl" + na + " - " + lu, ref RGB_blocks[0], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale));
+                        red_blocks.Add(Create_Chip("red_bl" + na + " - " + lu, ref RGB_blocks[0], sort_layer, Map_pos2 + obj_pos, obj_scale));
                         break;
                     case 4:
-                        green_blocks.Add(Create_Chip("green_bl" + na + " - " + lu, ref RGB_blocks[1], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale));
+                        green_blocks.Add(Create_Chip("green_bl" + na + " - " + lu, ref RGB_blocks[1], sort_layer, Map_pos2 + obj_pos, obj_scale));
                         break;
                     case 5:
-                        blue_blocks.Add(Create_Chip("blue_bl" + na + " - " + lu, ref RGB_blocks[2], sort_layer, new Vector3(na, -lu, 0.0f), obj_scale));
+                        blue_blocks.Add(Create_Chip("blue_bl" + na + " - " + lu, ref RGB_blocks[2], sort_layer, Map_pos2 + obj_pos, obj_scale));
                         break;
                     case 6:
                         GameObject goal = Instantiate(Map_pre[0]);
-                        goal.transform.position = new Vector3(na, -lu, 0.0f);
+                        goal.transform.position = Map_pos2 + obj_pos;
+                        goal.transform.localScale = obj_scale;
                         goal.transform.parent = Map_mother.transform;
                         break;
                     case 7:
                         GameObject player = Instantiate(Map_pre[1]);
-                        player.transform.position = new Vector3(na, -lu, 0.0f);
+                        player.transform.position = Map_pos2 + obj_pos;
+                        player.transform.localScale = obj_scale;
                         player.transform.parent = Map_mother.transform;
+                        player.GetComponent<Player_ctr>().Setplayer_scale(obj_scale.x);
                         break;
 
                 }

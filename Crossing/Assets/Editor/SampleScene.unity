@@ -167,11 +167,11 @@ MonoBehaviour:
   - {fileID: 6320910879810605881, guid: f682d7e02bcfc814fad41d1dee719381, type: 3}
   - {fileID: 207858017409301749, guid: 666378e11faea6f4ab04963320b635d4, type: 3}
   - {fileID: 2622256459364849656, guid: 69d1be54d549e8447a7291a77c9d679d, type: 3}
-  - {fileID: 120561577962812039, guid: cd7c24e7a8d71e742a881c641bafaa04, type: 3}
-  - {fileID: 5578869536899602032, guid: 7bf8917624abc124589aa4034be12438, type: 3}
+  - {fileID: 8442961104963587567, guid: 681fd06dc2927614887c84137c59b165, type: 3}
+  - {fileID: 3490468357963828323, guid: cd7c24e7a8d71e742a881c641bafaa04, type: 3}
   map_texture: {fileID: 2800000, guid: 568a7573692c9f24595f7adf3fc95b86, type: 3}
-  player: {fileID: 2800000, guid: d895ac81bf1477d4c9ea446a4e3260d2, type: 3}
-  goal: {fileID: 2800000, guid: b4d3c35f73857a940bfa6dddb3d4d407, type: 3}
+  goal: {fileID: 2800000, guid: 404f6655c380291448f64fdbdfa58ea1, type: 3}
+  player: {fileID: 2800000, guid: c51721d88528e52498502d12f652c162, type: 3}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
