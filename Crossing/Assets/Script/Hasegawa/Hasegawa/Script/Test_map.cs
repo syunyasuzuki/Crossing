@@ -2,6 +2,12 @@
 
 public class Test_map : MonoBehaviour
 {
+
+
+    
+
+
+
     [System.Serializable]
     public struct Size
     {
@@ -91,4 +97,12 @@ public class Test_map : MonoBehaviour
             goal.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
     }
+
+
+
+
+
+
+
+
 }
