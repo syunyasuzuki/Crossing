@@ -6,6 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+<<<<<<< HEAD
     path: Assets/Scenes/TitleScene.unity
     guid: d2a0bb9d5202c64489d8bed1bc634f91
   - enabled: 1
@@ -53,4 +54,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/stage/3/3-4.unity
     guid: e72f2890f773e664da3c06dbff73b653
+=======
+    path: Assets/Script/Hasegawa/Hasegawa/Scene/testGameScene.unity
+    guid: ffe1ebc2b457781449e419b7123eb980
+  - enabled: 0
+    path: Assets/Editor/SampleScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/GameSampleScene.unity
+    guid: f78ba26018db39c499871b1d5c37f9d8
+>>>>>>> origin/main
   m_configObjects: {}

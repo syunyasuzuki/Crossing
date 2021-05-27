@@ -4,9 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Red
   - Blue
   - Green
+=======
+  - Move
+  - Jump
+  - Turn
+  - Goal
+>>>>>>> origin/main
   layers:
   - Default
   - TransparentFX

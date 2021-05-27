@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -147,6 +148,30 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76458238e119fe84186515bc0ef8c21e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bc:
+  - {fileID: 0}
+  - {fileID: 2855023709990448166, guid: e19d67b7cb60ae64080b648982c203c8, type: 3}
+  - {fileID: 2761185238796187614, guid: 20cecc70e2165dc40982580e3a41fb3b, type: 3}
+  - {fileID: 6320910879810605881, guid: f682d7e02bcfc814fad41d1dee719381, type: 3}
+  - {fileID: 207858017409301749, guid: 666378e11faea6f4ab04963320b635d4, type: 3}
+  - {fileID: 2622256459364849656, guid: 69d1be54d549e8447a7291a77c9d679d, type: 3}
+  - {fileID: 8442961104963587567, guid: 681fd06dc2927614887c84137c59b165, type: 3}
+  - {fileID: 3490468357963828323, guid: cd7c24e7a8d71e742a881c641bafaa04, type: 3}
+  map_texture: {fileID: 2800000, guid: 568a7573692c9f24595f7adf3fc95b86, type: 3}
+  goal: {fileID: 2800000, guid: 404f6655c380291448f64fdbdfa58ea1, type: 3}
+  player: {fileID: 2800000, guid: c51721d88528e52498502d12f652c162, type: 3}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
