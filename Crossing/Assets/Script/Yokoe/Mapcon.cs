@@ -135,7 +135,7 @@ public class Mapcon : MonoBehaviour
     /// </summary>
     /// <param name="w">生成されるワールド</param>
     /// <param name="s">生成されるステージ</param>
-    public void Create_map(int w,int s)
+    void Create_map(int w,int s)
     {
         Map_mother = new GameObject("map_mother");
         //マップの一番左上の座標を求める
@@ -190,7 +190,7 @@ public class Mapcon : MonoBehaviour
     /// <summary>
     /// 現在使っているマップを消す
     /// </summary>
-    public void Delete_map()
+    void Delete_map()
     {
         GameObject map_mother = GameObject.Find("map_mother");
         Destroy(map_mother.gameObject);
@@ -201,7 +201,11 @@ public class Mapcon : MonoBehaviour
     {
         Set_path();
         Read_all_maps();
-        Create_map(0,0);
+        GameObject CreateBox = GameObject.Find("CreateBox");
+        int w = 0;
+        int s = 0;
+        CreateBox.GetComponent<CreateBox>().Get_num(ref w, ref s);
+        Create_map(w,s);
         GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColorBlockData(red_blocks, green_blocks, blue_blocks);
     }
 }
