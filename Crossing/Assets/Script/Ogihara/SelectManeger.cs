@@ -7,11 +7,16 @@ using UnityEngine.UI;
 public class SelectManeger : MonoBehaviour
 {
     Button button;
+     public static int stage = 0;
+    public static int worldMap = 0;
+     GameObject GameDI;
 
     void Start()
     {
         button = GameObject.Find("Canvas/ButtonMain/Button").GetComponent<Button>();
         button.Select();
+        GameDI = GameObject.Find("GameDirecter");
+        
     }
 
         // Start is called before the first frame update
@@ -24,15 +29,16 @@ public class SelectManeger : MonoBehaviour
     {
         SceneManager.LoadScene("SelectScene");
     }
-    public void OnClickStart1_1()
+    public  void OnClickStart1_1()
     {
         FadeManeger.Fade_flag_in = true;
         Invoke(nameof(LoadStage1_1), 1.0f);       
     }
-    void LoadStage1_1()
+   public static void LoadStage1_1()
     {
-        //SceneManager.LoadScene("1-1");
-
+        //SceneManager.LoadScene("1-1");   
+        worldMap = 1;
+        stage = 0;        
     }
     public void OnClickStart1_2()
     {
@@ -42,6 +48,9 @@ public class SelectManeger : MonoBehaviour
     void LoadStage1_2()
     {
         //SceneManager.LoadScene("1-2");
+        worldMap = 1;
+        stage = 1;
+       
     }
     public void OnClickStart1_3()
     {
@@ -50,7 +59,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage1_3()
     {
-        SceneManager.LoadScene("1-3");
+        //SceneManager.LoadScene("1-3");
+        worldMap= 1;
+        stage = 2;
     }
 
     public void OnClickStart1_4()
@@ -60,7 +71,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage1_4()
     {
-        SceneManager.LoadScene("1-4");
+        //SceneManager.LoadScene("1-4");
+        worldMap = 1;
+        stage = 3;
     }
     public void OnClickStart2_1()
     {
@@ -69,7 +82,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage2_1()
     {
-        SceneManager.LoadScene("2-1");
+        //SceneManager.LoadScene("2-1");
+        worldMap = 2;
+        stage = 4;
     }
     public void OnClickStart2_2()
     {
@@ -78,7 +93,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage2_2()
     {
-        SceneManager.LoadScene("2-2");
+        //SceneManager.LoadScene("2-2");
+        worldMap = 2;
+        stage = 5;
     }
     public void OnClickStart2_3()
     {
@@ -87,7 +104,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage2_3()
     {
-        SceneManager.LoadScene("2-3");
+        //SceneManager.LoadScene("2-3");
+        worldMap = 2;
+        stage = 6;
     }
     public void OnClickStart2_4()
     {
@@ -96,7 +115,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage2_4()
     {
-        SceneManager.LoadScene("2-4");
+        //SceneManager.LoadScene("2-4");
+        worldMap = 2;
+        stage = 7;
     }
      public void OnClickStart3_1()
     {
@@ -105,7 +126,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage3_1()
     {
-        SceneManager.LoadScene("3-1");
+        //SceneManager.LoadScene("3-1");
+        worldMap = 3;
+        stage = 8;
     }
      public void OnClickStart3_2()
     {
@@ -114,7 +137,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage3_2()
     {
-        SceneManager.LoadScene("3-2");
+        //SceneManager.LoadScene("3-2");
+        worldMap = 3;
+        stage = 9;
     }
     public void OnClickStart3_3()
     {
@@ -123,7 +148,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage3_3()
     {
-        SceneManager.LoadScene("3-3");
+        //SceneManager.LoadScene("3-3");
+        worldMap = 3;
+        stage = 10;
     }
     public void OnClickStart3_4()
     {
@@ -132,7 +159,9 @@ public class SelectManeger : MonoBehaviour
     }
     void LoadStage3_4()
     {
-        SceneManager.LoadScene("3-4");
+        //SceneManager.LoadScene("3-4");
+        worldMap = 3;
+        stage = 11;
     }
     public void NextSelect2()
     {

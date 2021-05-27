@@ -3,17 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-<<<<<<< HEAD
-  - Red
-  - Blue
-  - Green
-=======
-  - Move
-  - Jump
-  - Turn
-  - Goal
->>>>>>> origin/main
+  tags: []
   layers:
   - Default
   - TransparentFX
