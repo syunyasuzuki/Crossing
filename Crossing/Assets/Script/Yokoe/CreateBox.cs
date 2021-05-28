@@ -7,11 +7,11 @@ public class CreateBox : MonoBehaviour
     /// <summary>
     /// ワールド番号
     /// </summary>
-    private int world = 0;
+    private int world { get; set; } = 0;
     /// <summary>
     /// ステージ番号
     /// </summary>
-    private int stage = 0;
+    private int stagenumber { get; set; } = 0;
 
     void Awake()
     {
@@ -26,12 +26,12 @@ public class CreateBox : MonoBehaviour
     public void Set_num(int w,int s)
     {
         world = w;
-        stage = s;
+        stagenumber = s;
     }
 
     public void Get_num(ref int w, ref int s)
     {
         w = world;
-        s = stage;
+        s = stagenumber;
     }
 }

@@ -201,11 +201,12 @@ public class Mapcon : MonoBehaviour
     {
         Set_path();
         Read_all_maps();
-        GameObject CreateBox = GameObject.Find("CreateBox");
+        GameObject createbox = GameObject.Find("CreateBox");
         int w = 0;
         int s = 0;
-        CreateBox.GetComponent<CreateBox>().Get_num(ref w, ref s);
+        createbox.GetComponent<CreateBox>().Get_num(ref w, ref s);
         Create_map(w,s);
+        createbox.GetComponent<CreateBox>().deletegameobj();
         GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColorBlockData(red_blocks, green_blocks, blue_blocks);
     }
 }
