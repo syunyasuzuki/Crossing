@@ -177,7 +177,6 @@ public class Mapcon : MonoBehaviour
                         GameObject player = Instantiate(Map_pre[1]);
                         player.transform.position = Map_pos2 + obj_pos;
                         player.transform.localScale = obj_scale;
-                        player.transform.parent = Map_mother.transform;
                         player.GetComponent<Player_ctr>().Setplayer_scale(obj_scale.x);
                         break;
 
