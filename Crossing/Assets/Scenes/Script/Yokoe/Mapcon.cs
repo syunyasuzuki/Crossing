@@ -58,7 +58,7 @@ public class Mapcon : MonoBehaviour
             {
                 for (int y = 0; y < Mapsize_y; ++y)
                 {
-                    string[] strsplr = text_line[Mapsize_y * s + y + 1].Split(',');
+                    string[] strsplr = text_line[(Mapsize_y + 1) * s + y + 1].Split(',');
                     for (int x = 0; x < Mapsize_x; ++x)
                     {
                         map[w, s, y, x] = int.Parse(strsplr[x]);
