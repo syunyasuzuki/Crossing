@@ -227,7 +227,7 @@ public class MapEdita : MonoBehaviour
             string[] str1 = new string[Maxsize_y];
             for (int lu = 0; lu < Maxsize_y; ++lu)
             {
-                str1[lu] = all_data[(lu + Maxsize_y + 1) * i + 1];
+                str1[lu] = all_data[lu + (Maxsize_y + 1) * i + 1];
 
                 //文字列をばらして配列に入れる
                 string[] str3 = str1[lu].Split(',');
