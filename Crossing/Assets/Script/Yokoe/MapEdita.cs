@@ -201,14 +201,6 @@ public class MapEdita : MonoBehaviour
         map = new int[Maxmap_num, Maxsize_y, Maxsize_x];
     }
 
-    ///// <summary>
-    ///// 配列を再度確保しなおす
-    ///// </summary>
-    //void Reset_setting()
-    //{
-
-    //}
-
     /// <summary>
     /// 読み込んだデータから空白を消す
     /// </summary>
@@ -235,7 +227,7 @@ public class MapEdita : MonoBehaviour
             string[] str1 = new string[Maxsize_y];
             for (int lu = 0; lu < Maxsize_y; ++lu)
             {
-                str1[lu] = all_data[lu + Maxsize_y * i + 1];
+                str1[lu] = all_data[(lu + Maxsize_y + 1) * i + 1];
 
                 //文字列をばらして配列に入れる
                 string[] str3 = str1[lu].Split(',');
@@ -362,7 +354,7 @@ public class MapEdita : MonoBehaviour
     {
         Debug.Log("ファイルに書き出し");
         //ファイルに書き出す行数を確定
-        int Write_num = Maxsize_y * map_n + 1;
+        int Write_num = (Maxsize_y + 1) * map_n + 1;
 
         string[] write_str = new string[Write_num];
 
@@ -372,7 +364,7 @@ public class MapEdita : MonoBehaviour
         //マップ情報を確定
         for (int i = 0; i < map_n; ++i)
         {
-            int subint = Maxsize_y * i;
+            int subint = (Maxsize_y + 1) * i + 1;
             for (int lu = 0; lu < Maxsize_y; ++lu)
             {
                 string sub_x = "";
@@ -381,8 +373,9 @@ public class MapEdita : MonoBehaviour
                     sub_x = sub_x + map[i, lu, na] + ",";
                 }
                 sub_x = sub_x.Substring(0, sub_x.Length - 1);
-                write_str[subint + lu + 1] = sub_x;
+                write_str[subint + lu] = sub_x;
             }
+            write_str[subint + Maxsize_y] = ",";
         }
 
         //テキストに書き出し
