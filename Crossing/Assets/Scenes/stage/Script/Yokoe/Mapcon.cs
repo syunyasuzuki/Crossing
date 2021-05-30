@@ -41,6 +41,16 @@ public class Mapcon : MonoBehaviour
     const int Mapsize_y = 10;
 
     /// <summary>
+    /// 現在生成されているワールド
+    /// </summary>
+    private int now_world = 0;
+
+    /// <summary>
+    /// 現在生成されているステージ
+    /// </summary>
+    private int now_stage = 0;
+
+    /// <summary>
     /// 全てのマップデータ
     /// </summary>
     int[,,,] map = new int[World_num, Stage_num, Mapsize_y, Mapsize_x];
@@ -201,11 +211,8 @@ public class Mapcon : MonoBehaviour
         Set_path();
         Read_all_maps();
         GameObject createbox = GameObject.Find("CreateBox");
-        int w = 0;
-        int s = 0;
-        createbox.GetComponent<CreateBox>().Get_num(ref w, ref s);
-        Create_map(w,s);
-        createbox.GetComponent<CreateBox>().deletegameobj();
+        createbox.GetComponent<CreateBox>().Get_num(ref now_world, ref now_stage);
+        Create_map(now_world,now_stage);
         GameObject.Find("GameMaster").GetComponent<Mobius_con3>().SetColorBlockData(red_blocks, green_blocks, blue_blocks);
     }
 }
