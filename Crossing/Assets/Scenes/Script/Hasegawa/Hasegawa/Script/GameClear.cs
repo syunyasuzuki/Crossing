@@ -84,14 +84,8 @@ public class GameClear : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            IsGameClear = true;
-            clearmother.SetActive(true);
-            mode = Mode.movex;
-        }
-
         if (!IsGameClear) return;
+
         switch (mode)
         {
             case Mode.movex:
@@ -133,17 +127,17 @@ public class GameClear : MonoBehaviour
                             case 0:
                                 //リトライ時
                                 //同じシーンを読み込む
-                                SceneManager.LoadScene("");
+                                SceneManager.LoadScene("GameSampleScene");
                                 break;
                             case 1:
                                 //ステージ選択へ
                                 createbox.GetComponent<CreateBox>().deletegameobj();
-                                SceneManager.LoadScene("");
+                                SceneManager.LoadScene("SelectScene");
                                 break;
                             case 2:
                                 //タイトルへ
                                 createbox.GetComponent<CreateBox>().deletegameobj();
-                                SceneManager.LoadScene("");
+                                SceneManager.LoadScene("TitleScene");
                                 break;
                         }
                     }
@@ -172,6 +166,8 @@ public class GameClear : MonoBehaviour
     {
         if (collision.tag == "Player" && GameClearSprite != null && time <= DisplayTime)
         {
+            GameObject ui = GameObject.Find("GameMaster");
+            Destroy(ui.GetComponent<Mobius_con3>());
             Destroy(collision.gameObject.GetComponent<Player_ctr>());
             IsGameClear = true;
             clearmother.SetActive(true);
