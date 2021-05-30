@@ -49,8 +49,7 @@ public class Fadescale : MonoBehaviour
             {
                 FadeOut();
             }
-        }
-        
+        }        
     }
 
     void FadeIn()

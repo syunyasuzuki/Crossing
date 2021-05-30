@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SelectManeger : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class SelectManeger : MonoBehaviour
         button = GameObject.Find("Canvas/ButtonMain/Button").GetComponent<Button>();
         button.Select();
         GameObject g = new GameObject("CreateBox");
-        CreativBox = g.AddComponent<CreateBox>();
+        CreativBox = g.AddComponent<CreateBox>();       
     }
 
         // Start is called before the first frame update
@@ -200,7 +201,8 @@ public class SelectManeger : MonoBehaviour
 
     void Update()
     {
-
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }
 
