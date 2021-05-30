@@ -310,7 +310,7 @@ MonoBehaviour:
   - {fileID: -3549104551773859596, guid: 568a7573692c9f24595f7adf3fc95b86, type: 3}
   - {fileID: -2157326553912597188, guid: 568a7573692c9f24595f7adf3fc95b86, type: 3}
   Map_pre:
-  - {fileID: 5578869536899602032, guid: 7bf8917624abc124589aa4034be12438, type: 3}
+  - {fileID: 8442961104963587567, guid: 681fd06dc2927614887c84137c59b165, type: 3}
   - {fileID: 3490468357963828323, guid: cd7c24e7a8d71e742a881c641bafaa04, type: 3}
   Map_pos: {x: 0, y: 0.5, z: 0}
   obj_scale: {x: 0.7, y: 0.7, z: 0.7}
