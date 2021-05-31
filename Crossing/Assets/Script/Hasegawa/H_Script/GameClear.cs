@@ -127,17 +127,17 @@ public class GameClear : MonoBehaviour
                             case 0:
                                 //リトライ時
                                 //同じシーンを読み込む
-                                SceneManager.LoadScene("GameSampleScene");
+                                Invoke(nameof(Retry), 0.5f);
                                 break;
                             case 1:
                                 //ステージ選択へ
                                 createbox.GetComponent<CreateBox>().deletegameobj();
-                                SceneManager.LoadScene("SelectScene");
+                                Invoke(nameof(LoadSelect), 0.5f);
                                 break;
                             case 2:
                                 //タイトルへ
                                 createbox.GetComponent<CreateBox>().deletegameobj();
-                                SceneManager.LoadScene("TitleScene");
+                                Invoke(nameof(LoadTitle), 0.5f);
                                 break;
                         }
                     }
@@ -160,6 +160,20 @@ public class GameClear : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    void Retry()
+    {
+        SceneManager.LoadScene("GameSampleScene");
+    }
+
+    void LoadSelect()
+    {
+        SceneManager.LoadScene("SelectScene");
+    }
+    void LoadTitle()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

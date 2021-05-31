@@ -13,7 +13,7 @@ public class Mapcon : MonoBehaviour
     /// <summary>
     /// １つのワールドのステージ数
     /// </summary>
-    const int Stage_num = 10;
+    const int Stage_num = 12;
 
 
     /// <summary>

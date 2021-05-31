@@ -22,10 +22,15 @@ public class FadeManeger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        Scene gameSc = SceneManager.GetActiveScene();
+        if (gameSc.name != "GameSampleScene")
         {
-            Fade_flag_out = true;
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Fade_flag_out = true;
+            }
         }
+     
          if(Fade == true)
         {
             if(Fade_flag_in == true)
@@ -41,7 +46,7 @@ public class FadeManeger : MonoBehaviour
 
     void FadeIn()
     {
-        alpha -= Time.deltaTime;
+        alpha -= 2.5f * Time.deltaTime;
         if (alpha <= 0)
         {
             alpha = 0;
@@ -52,7 +57,7 @@ public class FadeManeger : MonoBehaviour
 
     void FadeOut()
     {
-        alpha += Time.deltaTime;
+        alpha += 2.5f * Time.deltaTime;
         if (alpha >= 1)
         {
             alpha = 1;

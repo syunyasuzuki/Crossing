@@ -16,7 +16,12 @@ public class TitleManeger : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Return))
         {
-            SceneManager.LoadScene("SelectScene");
+            Invoke(nameof(LoadSelect), 0.5f);
         }
+    }
+
+    void LoadSelect()
+    {
+        SceneManager.LoadScene("SelectScene");
     }
 }
